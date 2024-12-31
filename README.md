@@ -1,6 +1,16 @@
 ## Dish Anywhere web sample tests
-- Playwright - Typescirpt
-- While not signed in
+
+- Playwright - Typescript
+  - `npm list`
+    - `@playwright/test@1.49.1`
+    - `@types/node@22.10.2`
+
+- Repo only has following directories
+  - Models - Web page and API request
+  - Tests - spec test files
+- To run tests need to install `playwright` and `Typescript`
+
+- All tests when not signed in to DishAnywhere
 
 ### Base (Home) Page tests
 - Copyright and version via API call
