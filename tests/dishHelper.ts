@@ -39,9 +39,9 @@ export async function genCheckCopyright(
     await healthAPI.evalHealth(dishPage.getWebBaseURL());
     expect(healthAPI.getEnv()).toBe(dishPage.getWebEnv())
     const webVer = healthAPI.getWebVer()
-    const webYear = "©20" + webVer.split('.')[0]
+    const year = new Date().getFullYear()
     const copyRightExp = (dishPage.getHideFooter()?""
-                :`${webYear} DISH Network L.L.C. All rights reserved. Version ${webVer}`)
+                :`©${year} DISH Network L.L.C. All rights reserved. Version ${webVer}`)
     // await dishPage.hoverCopyElem();
     const copyRightText = await dishPage.getCopyText(debug);
     if (debug) console.log(`expWright: ${copyRightExp}`)
