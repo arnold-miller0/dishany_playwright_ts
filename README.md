@@ -56,12 +56,26 @@
 - Execute SignIn tests via `npx playwright test dishSignIn.spec.ts`
 
 ### Failure tests
-- Network menu option only in Small Screen Mode (3 lines) 
-- Skip all failure tests
+- Main Menu Network option only in Small Screen Mode (3 lines) 
+  - Manually check that Main Menu in Small Screen Mode still has Network option
+- Test File: `dishFailures.spec.ts`
+- To execute tests - remove skip from tests
+  - change from `test.skip(..)` to `test(..)`
+- Before add-commit chnages Remember to skip test if still fail
+  - change from `test(..)` to `test.skip(..)`
 - Execute Failure tests via `npx playwright test dishFailures.spec.ts`
 - UI Failure tests `npx playwright test dishFailures.spec.ts --ui`
 
 ### Other Execute options
-- Specific browser
-- Display browser 
+- Run all tests, all browsers, not display browsers, max workers
+  - `npx playwright test`
+- Specific browser (chromium, firefox, webkit)
+  - `npx playwright test dishSignIn.spec.ts --project chromium`
+  - `npx playwright test dishSports.spec.ts --project firefox`
+  - `npx playwright test dishHome.spec.ts --project webkit`
+- Display browser (all browsers)
+  - `npx playwright test dishBase.spec.ts --headed`
+- Parallel workers (all browsers)
+  - `npx playwright test dishHome.spec.ts --workers 4` 
+
 ## DONE
