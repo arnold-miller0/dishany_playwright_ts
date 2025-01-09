@@ -1,6 +1,8 @@
 ## Dish Anywhere web sample tests
 
 - Playwright - Typescript
+   - Windows 11 OS on 9 Jan 2025
+  - Playwright: Version 1.45.1
   - `npm list`
     - `@playwright/test@1.49.1`
     - `@types/node@22.10.2`
@@ -17,6 +19,11 @@
     - Add a GitHub Actions workflow? (y/N) » `false`
     - Install Playwright browsers (can be done manually via 'npx playwright install')? (Y/n) » `true`
 - After install completes
+  - run `npm list` check above `@playwright/test@` and `@types/node@` version
+    - if `UNMET DEPENDENCY` or missing then install these npm packages via
+      - `npm install @playwright/test@` or `npm install @playwright/test@1.49.1`
+      - `npm install @types/node@` or `npm install @types/node@22.10.2`
+      - check again via `npm list`
   - move `tests/example.spec.ts` file to `tests-examples` directory
 
 ### Execution Notes
