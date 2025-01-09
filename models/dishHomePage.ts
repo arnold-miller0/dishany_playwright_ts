@@ -28,8 +28,8 @@ export class DishAnywhereHomePage extends DishAnywhereBasePage {
         // search locators
         this.searchIcon = this.page.locator('img#search-icon');
         this.searchInput = this.page.locator('div#search-container').locator('input#search-input');
-        this.searchResults = this.page.locator('#search-results-container');
-        this.searchClose = this.page.locator('#close-icon');
+        this.searchResults = this.page.locator('div#search-results-container');
+        this.searchClose = this.page.locator('svg#close-icon');
 
         // Carousel and Promptional lists
         this.mostPopGroup = page.locator('div#carousel-item').nth(0);
