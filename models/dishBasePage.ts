@@ -6,6 +6,7 @@ export class DishAnywhereBasePage {
     readonly page: Page;
 
     readonly topMenus:Locator
+    readonly menuItems:Locator
     readonly menuHome:Locator
     readonly menuGuide:Locator
     readonly menuDVR:Locator
@@ -32,14 +33,15 @@ export class DishAnywhereBasePage {
 
         // Menu items 
         this.topMenus = page.locator('div#top-menu-items-container');
-        this.menuHome = this.page.locator('a#home-menu-item');
-        this.menuGuide = this.page.locator('a#guide-menu-item');
-        this.menuDVR =  this.page.locator('a#dvr-menu-item');
-        this.menuSports = this.page.locator('a#sports-menu-item');
-        this.menuOnDemand = this.page.locator('a#on-demand-menu-item');
-        this.menuSignIn =  this.page.locator('a#sign-in-menu-item');
+        this.menuItems = this.topMenus.locator('a');
+        this.menuHome = this.topMenus.locator('a#home-menu-item');
+        this.menuGuide = this.topMenus.locator('a#guide-menu-item');
+        this.menuDVR =  this.topMenus.locator('a#dvr-menu-item');
+        this.menuSports = this.topMenus.locator('a#sports-menu-item');
+        this.menuOnDemand = this.topMenus.locator('a#on-demand-menu-item');
+        this.menuSignIn =  this.topMenus.locator('a#sign-in-menu-item');
 
-        this.menuNetworks =  this.page.locator('a#networks-menu-item');
+        this.menuNetworks =  this.topMenus.locator('a#networks-menu-item');
         
         // Copyright 
         this.copyright = page.locator('span#footer-copyright-text')
@@ -78,6 +80,12 @@ export class DishAnywhereBasePage {
 
     async hoverCopyElem():Promise<void> {
         await this.copyright.hover();
+    }
+
+    
+
+    async getMenuItemCount():Promise<number> {
+        return await this.menuItems.count();
     }
 
     async getCopyText(debug?:boolean):Promise<string> {
