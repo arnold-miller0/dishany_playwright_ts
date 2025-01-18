@@ -13,7 +13,7 @@ test('Dish Base Menu Texts', async ({ page }) => {
     await checkMenuTextValues(basePage, true)
 });
 
-test.only('Dish Base Menu Count', async ({ page }) => {
+test('Dish Base Menu Count', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
     const amount:number = await basePage.getMenuItemCount()
