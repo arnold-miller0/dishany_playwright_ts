@@ -13,6 +13,13 @@ test('Dish Base Menu Texts', async ({ page }) => {
     await checkMenuTextValues(basePage, true)
 });
 
+test('Dish Base Menu Count', async ({ page }) => {
+    const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
+    await basePage.goto();
+    const amount:number = await basePage.getMenuItemCount()
+    console.log(`Base Menu: ${amount} items`)
+    expect(amount).toEqual(6);
+});
 test('Dish Base Menu Home', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
