@@ -8,6 +8,11 @@ import { genCheckCopyright, checkMenuTextValues, expSignInButton,
 const webBaseUrl = "https://www.dishanywhere.com";
 const webApiEnv = 'production';
 
+// Menu Icon Browser width <= 1024
+test.use({
+    viewport: {width: 1020, height: 800}
+});
+
 test('Dish DVR Copyright', async ({ page, request }) => {
     const dvrPage = new DishAnywhereDVRPage(page, webBaseUrl, webApiEnv);
     await dvrPage.goto(true);

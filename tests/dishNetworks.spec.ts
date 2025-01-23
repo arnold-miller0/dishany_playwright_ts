@@ -2,7 +2,7 @@ import { test, expect} from '@playwright/test';
 import { DishAnywhereBasePage } from '../models/dishBasePage';;
 
 import { DishHealthCheckAPI } from '../models/dishHealthCheck';
-import { genCheckCopyright } from './dishHelper';
+import { genCheckCopyright,  checkMenuTextValues } from './dishHelper';
 
 const webBaseUrl = "https://www.dishanywhere.com";
 const webApiEnv = 'production';
@@ -26,18 +26,25 @@ test('Dish Network Menu Count', async ({ page }) => {
 test('Dish Base Menu Networks', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
-    await basePage.clickMenuIcon();
     await basePage.clickMenuNetworks(true);
 });
 
-test.only('Dish Network Copyright', async ({ page, request }) => {
+test('Dish Network Copyright', async ({ page, request }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
-    await basePage.clickMenuIcon();
     await basePage.clickMenuNetworks(true);
     
     const health = new DishHealthCheckAPI(request);
     await genCheckCopyright(basePage, health, true)
+});
+
+
+test('Dish Network Menu Texts', async ({ page }) => {
+    const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
+    await basePage.goto();
+    await basePage.clickMenuNetworks(true);
+    
+    await checkMenuTextValues(basePage, true)
 });
 
 test('Dish Base Network Text', async ({ page }) => {

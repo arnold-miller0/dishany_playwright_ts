@@ -44,7 +44,7 @@ export class DishAnywhereOnDemandPage extends DishAnywhereBasePage {
 
     async clickSignInButton(debug?:boolean): Promise<void> {
         expect(this.isLoggedIn()).toBeFalsy();
-        await this._clickMenuItem(this.signInObj.getButtonElem(), debug);
+        await this._clickMenuItem(this.signInObj.getButtonElem(), false, debug);
     }
 
 }

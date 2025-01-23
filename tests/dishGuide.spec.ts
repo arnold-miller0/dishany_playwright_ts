@@ -8,6 +8,11 @@ import { genCheckCopyright, checkMenuTextValues, expSignInButton,
 const webBaseUrl = "https://www.dishanywhere.com";
 const webApiEnv = 'production';
 
+// Menu List Browser width > 1024
+test.use({
+    viewport: {width: 1080, height: 800}
+});
+
 test('Dish Guide Menu Texts', async ({ page }) => {
     const guidePage = new DishAnywhereGuidePage(page, webBaseUrl, webApiEnv);
     await guidePage.goto(true);

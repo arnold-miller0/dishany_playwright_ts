@@ -52,20 +52,43 @@ export async function checkMenuTextValues(
     dishPage: DishAnywhereBasePage,
     debug?:boolean
 ): Promise<void> {
+
+    await dishPage.clickMenuIcon()
+
     const homeText = await dishPage.menuHomeText();
+    const homeExp = "Home";
+
     const guideText = await dishPage.menuGuideText();
+    const guideExp = "Guide";
+    
     const dvrText = await dishPage.menuDVRText();
+    const dvrExp = "DVR";
+    
     const sportsText = await dishPage.menuSportsText();
+    const sportsnExp = "Sports";
+    
     const onDemandText = await dishPage.menuOnDemandText();
+    const onDemandExp = "On Demand";
+    
     const signInText = await dishPage.menuSignInText();
+    const signInExp = "Sign in";
+    
+    let networksText = "";
+    let networksExp = "";
+
+    if (dishPage.hasMenuIcon()) {
+        networksText = await dishPage.menuNetworksText();
+        networksExp = "Networks";
+    }
 
     if (debug) {
-        console.log(`menu: ${homeText}; ${guideText}; ${dvrText}; ${sportsText}; ${onDemandText}; ${signInText};`)
+        console.log(`menu: ${homeText}; ${guideText}; ${dvrText}; ${sportsText}; ${onDemandText}; ${signInText}; ${networksText};`)
     }
-    expect(homeText).toBe("Home")
-    expect(guideText).toBe("Guide")
-    expect(dvrText).toBe("DVR")
-    expect(sportsText).toBe("Sports")
-    expect(onDemandText).toBe("On Demand")
-    expect(signInText).toBe("Sign in")
+    expect(homeText).toBe(homeExp)
+    expect(guideText).toBe(guideExp)
+    expect(dvrText).toBe(dvrExp)
+    expect(sportsText).toBe(sportsnExp)
+    expect(onDemandText).toBe(onDemandExp)
+    expect(signInText).toBe(signInExp)
+    expect(networksText).toBe(networksExp)
 }

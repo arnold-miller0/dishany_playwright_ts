@@ -22,6 +22,9 @@ export class DishAnywhereBasePage {
     protected _webEnv: string;
     protected _loggedIn: boolean;
     protected _hideFooter: boolean
+    protected _hasMenuIcon: boolean
+
+    private _maxIconWidth:number = 1024;
 
     constructor(page: Page, baseURL: string, env: string, hide?:boolean) {
         this.page = page;
@@ -30,7 +33,8 @@ export class DishAnywhereBasePage {
         this._webEnv = env;
         this._loggedIn = false;
 
-        this._hideFooter = (hide?true:false)
+        this._hideFooter = (hide?true:false);
+        this._hasMenuIcon = false;
 
         // Menu items 
         this.menuIcon = page.locator('div#menu-button');
@@ -43,6 +47,7 @@ export class DishAnywhereBasePage {
         this.menuOnDemand = this.topMenus.locator('a#on-demand-menu-item');
         this.menuSignIn =  this.topMenus.locator('a#sign-in-menu-item');
 
+        // only displayed with Menu Icon
         this.menuNetworks =  this.topMenus.locator('a#networks-menu-item');
         
         // Copyright 
@@ -52,6 +57,10 @@ export class DishAnywhereBasePage {
     
     async goto():Promise<void> {
         await this.page.goto(`${this._webBaseURL}/`);
+
+        const browserWidth = await this.page.evaluate(() => window.innerWidth);
+        this._hasMenuIcon = browserWidth <= this._maxIconWidth
+        console.log(`Menu Icon: ${this._hasMenuIcon}; width: ${browserWidth}`);
 
         // wait for top Menus, default (Home) URL and copyright visible
         await this.topMenus.isVisible();
@@ -78,6 +87,10 @@ export class DishAnywhereBasePage {
         return this._loggedIn;
     }
 
+    hasMenuIcon(): boolean {
+        return this._hasMenuIcon;
+    }
+
     async hoverCopyElem():Promise<void> {
         await this.copyright.hover();
     }
@@ -92,15 +105,17 @@ export class DishAnywhereBasePage {
         return elemText;
     }
 
-    async clickMenuIcon(debug?:boolean): Promise<void> {
-        await this.menuIcon.click()
+    async clickMenuIcon(): Promise<void> {
+        if (this._hasMenuIcon) {await this.menuIcon.click()}
     }
 
     protected async _clickMenuItem(
         menuItem:Locator, 
-        debug?:boolean) {
-        const browserWidth = await this.page.evaluate(() => window.innerWidth);
-        console.log(`Browser width: ${browserWidth}`);
+        isMenu:boolean,
+        debug?:boolean) 
+    {
+        if (isMenu) await this.clickMenuIcon()
+            
         const href = await menuItem.getAttribute('href');
         const expNewUrl = `${this._webBaseURL}${href}`
         if (debug) {
@@ -117,7 +132,7 @@ export class DishAnywhereBasePage {
     }
     
     async clickMenuHome(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuHome, debug)
+        await this._clickMenuItem(this.menuHome, true, debug)
     }
 
     async menuHomeText(): Promise<string> {
@@ -125,7 +140,7 @@ export class DishAnywhereBasePage {
     }
     
     async clickMenuGuide(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuGuide, debug)
+        await this._clickMenuItem(this.menuGuide, true, debug)
     }
 
     async menuGuideText(): Promise<string> {
@@ -133,7 +148,7 @@ export class DishAnywhereBasePage {
     }
 
     async clickMenuDVR(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuDVR, debug)
+        await this._clickMenuItem(this.menuDVR, true, debug)
     }
 
     async menuDVRText(): Promise<string> {
@@ -141,7 +156,7 @@ export class DishAnywhereBasePage {
     }
 
     async clickMenuSports(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuSports, debug)
+        await this._clickMenuItem(this.menuSports, true, debug)
     }
 
     async menuSportsText(): Promise<string> {
@@ -149,7 +164,7 @@ export class DishAnywhereBasePage {
     }
 
     async clickMenuOnDemand(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuOnDemand, debug)
+        await this._clickMenuItem(this.menuOnDemand, true, debug)
     }
     
     async menuOnDemandText(): Promise<string> {
@@ -157,7 +172,7 @@ export class DishAnywhereBasePage {
     }
 
     async clickMenuNetworks(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuNetworks, debug)
+        await this._clickMenuItem(this.menuNetworks, true, debug)
     }
 
     async menuNetworksText(): Promise<string> {
@@ -165,7 +180,7 @@ export class DishAnywhereBasePage {
     }
 
     async clickMenuSignIn(debug?:boolean): Promise<void> {
-        await this._clickMenuItem(this.menuSignIn, debug)
+        await this._clickMenuItem(this.menuSignIn, true, debug)
     }
 
     async menuSignInText(): Promise<string> {
