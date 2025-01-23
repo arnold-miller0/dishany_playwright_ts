@@ -5,6 +5,7 @@ export class DishAnywhereBasePage {
 
     readonly page: Page;
 
+    readonly menuIcon:Locator
     readonly topMenus:Locator
     readonly menuItems:Locator
     readonly menuHome:Locator
@@ -32,6 +33,7 @@ export class DishAnywhereBasePage {
         this._hideFooter = (hide?true:false)
 
         // Menu items 
+        this.menuIcon = page.locator('div#menu-button');
         this.topMenus = page.locator('div#top-menu-items-container');
         this.menuItems = this.topMenus.locator('a');
         this.menuHome = this.topMenus.locator('a#home-menu-item');
@@ -60,11 +62,9 @@ export class DishAnywhereBasePage {
         await this.copyright.isVisible();
     }
 
-    
     getHideFooter(): boolean {
         return this._hideFooter
     }
-
 
     getWebBaseURL(): string {
         return this._webBaseURL
@@ -82,8 +82,6 @@ export class DishAnywhereBasePage {
         await this.copyright.hover();
     }
 
-    
-
     async getMenuItemCount():Promise<number> {
         return await this.menuItems.count();
     }
@@ -94,9 +92,15 @@ export class DishAnywhereBasePage {
         return elemText;
     }
 
+    async clickMenuIcon(debug?:boolean): Promise<void> {
+        await this.menuIcon.click()
+    }
+
     protected async _clickMenuItem(
         menuItem:Locator, 
         debug?:boolean) {
+        const browserWidth = await this.page.evaluate(() => window.innerWidth);
+        console.log(`Browser width: ${browserWidth}`);
         const href = await menuItem.getAttribute('href');
         const expNewUrl = `${this._webBaseURL}${href}`
         if (debug) {
@@ -108,10 +112,8 @@ export class DishAnywhereBasePage {
         await this.page.waitForURL(`${expNewUrl}`)
     }
 
-    
     protected async _getItemText(menuItem:Locator):Promise<string> {
         return await menuItem.innerText();
-       
     }
     
     async clickMenuHome(debug?:boolean): Promise<void> {
@@ -126,7 +128,6 @@ export class DishAnywhereBasePage {
         await this._clickMenuItem(this.menuGuide, debug)
     }
 
-    
     async menuGuideText(): Promise<string> {
         return await this._getItemText(this.menuGuide)
     }
@@ -155,11 +156,11 @@ export class DishAnywhereBasePage {
         return await this._getItemText(this.menuOnDemand)
     }
 
-    async clickMenuNetwork(debug?:boolean): Promise<void> {
+    async clickMenuNetworks(debug?:boolean): Promise<void> {
         await this._clickMenuItem(this.menuNetworks, debug)
     }
 
-    async menuNetworkText(): Promise<string> {
+    async menuNetworksText(): Promise<string> {
         return await this._getItemText(this.menuNetworks)
     }
 
