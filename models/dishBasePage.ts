@@ -90,7 +90,7 @@ export class DishAnywhereBasePage {
 
     async getCopyText(debug?:boolean):Promise<string> {
         const elemText:string = await this.copyright.innerText();
-        if (debug) console.log(elemText)
+        if (debug) console.log(`web: ${elemText}`)
         return elemText;
     }
 
@@ -106,7 +106,6 @@ export class DishAnywhereBasePage {
         await menuItem.isVisible();
         await menuItem.click();
         await this.page.waitForURL(`${expNewUrl}`)
-        expect(this.page.url()).toBe(expNewUrl);
     }
 
     

@@ -44,7 +44,7 @@ export async function genCheckCopyright(
                 :`©${year} DISH Network L.L.C. All rights reserved. Version ${webVer}`)
     // await dishPage.hoverCopyElem();
     const copyRightText = await dishPage.getCopyText(debug);
-    if (debug) console.log(`expWright: ${copyRightExp}`)
+    if (debug) console.log(`exp: ${copyRightExp}`)
     expect(copyRightText).toBe(copyRightExp)
 }
 
