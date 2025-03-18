@@ -73,6 +73,21 @@
 - Execute Failure tests via `npx playwright test dishFailures.spec.ts`
 - UI Failure tests `npx playwright test dishFailures.spec.ts --ui`
 
+### Fix now or later Failed tests 
+- Run UI for Spec file with consistent failed tests
+  - Example Spec file: "dishBase.spec.ts" has Test: "Dish Base Copyright" fails
+  - Example`npx playwright test dishBase.spec.ts --ui`
+- Have playwright only run the failed tests via change from `test(..)` to `test.only(..)`
+  - Example `test('Dish Base Copyright', ....)` to `test.only('Dish Base Copyright', ...)`
+- Option 1: Debug and fix failed tests
+  - Then change back from `test.only(..)` to `test(..)`
+  - Run complete spec file to see if fix caused other failures
+  - Might what to run all spec file test before check-in fixes
+- Option 2: Debug and decide to fix later
+  - Document failure reason and why fix later
+  - Now change `test.only(..)` to `test.skip(..)`
+  - Might want to move failed test to a spec failure file
+
 ### Other Execute options
 - Run all tests, all browsers, not display browsers, max workers
   - `npx playwright test`

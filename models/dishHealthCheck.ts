@@ -29,7 +29,11 @@ export class DishHealthCheckAPI {
         const data:CheckJson = await response.json()
         this._env = data.env;
         this._branch = data.git.branch;
-        this._webVer = this._branch.replace(/-/g,".");
+        // API branch version format = 'yy-q-s' for year, quarter, sprint
+        //          with optional '-p' for patch
+        // Web release version is only 'yy.q.s' so need to ignore optional '-p'
+        const [year, sprint, quarter] = this._branch.split('-')
+        this._webVer = year + '.' + sprint + '.' + quarter
     }
 
     getEnv(): String {

@@ -23,15 +23,15 @@ test('Dish Network Menu Count', async ({ page }) => {
 
 // from file: dishBase.spec.ts
 // Menu Networks only with Menu Icon Bar not with Menu List Bar
-test.skip('Dish Base Menu Networks', async ({ page }) => {
+test('Dish Base Menu Networks', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
-    await basePage.clickMenuIcon();
+    // clickMenuNetworks does clickMenuIcon();
     await basePage.clickMenuNetworks(true);
 });
 
 // when above 'Menu Networks' test pass then run this test
-test.skip('Dish Base Network Text', async ({ page }) => {
+test('Dish Base Network Text', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
     await basePage.clickMenuIcon();
