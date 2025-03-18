@@ -20,10 +20,10 @@ test('Dish Base Menu Count', async ({ page }) => {
     console.log(`Base Menu: ${amount} items`)
     expect(amount).toEqual(6);
 });
+
 test('Dish Base Menu Home', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
-    
     await basePage.clickMenuHome(true);
 });
 
