@@ -23,6 +23,7 @@ test('Dish Network Menu Count', async ({ page }) => {
 
 // from file: dishBase.spec.ts
 // Menu Networks only with Menu Icon Bar not with Menu List Bar
+// Need set spec test browser width to move to dishBase.spec.ts
 test('Dish Base Menu Networks', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
