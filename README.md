@@ -63,7 +63,7 @@
 - Execute SignIn tests via `npx playwright test dishSignIn.spec.ts`
 
 ### Failure tests
-- Main Menu Network option only in Small Screen Mode (3 lines) 
+- Example: Main Menu Network option only in Small Screen Mode (3 lines) 
   - Manually check that Main Menu in Small Screen Mode still has Network option
 - Test File: `dishFailures.spec.ts`
 - To execute tests - remove skip from tests
@@ -72,6 +72,20 @@
   - change from `test(..)` to `test.skip(..)`
 - Execute Failure tests via `npx playwright test dishFailures.spec.ts`
 - UI Failure tests `npx playwright test dishFailures.spec.ts --ui`
+#### Menu Network option - solution
+- Set Browser width <= 1024 displays `Menu Network`
+- Fixed failed tests and moved to Network Menu Spec file
+  - With set Browser width before all tests
+  - TODO set Browser width for specific test 
+- TODO create Dish Network page Model to check network lists
+  - API https://radish.dishanywhere.com/v20/dol/networks/home.json
+    - fields: slug, name, network_id, vod_download, network_players (list), 
+    - fields: network_player, banner, is_ad_free, howcount, moviecount,  
+    - fields: franchise_count, has_live_content, logo, promo (list)
+  - Unlocked Networks via API `"is_locked": false`
+  - Live Networks via API `"has_stream": true`
+  - Latino Networks via API `"is_latino_package_network": true`
+  - Movie Pack Networks via API `"is_bb": true`
 
 ### Fix now or later Failed tests 
 - Run UI for Spec file with consistent failed tests
