@@ -1,6 +1,8 @@
 import { test, expect} from '@playwright/test';
-import { DishAnywhereBasePage } from '../models/dishBasePage';;
+import { DishAnywhereBasePage } from '../models/dishBasePage';
 
+import { DishAnywhereNetworkPage } from '../models/dishNetworkPage';
+ 
 import { DishHealthCheckAPI } from '../models/dishHealthCheck';
 import { genCheckCopyright,  checkMenuTextValues } from './dishHelper';
 
@@ -15,7 +17,7 @@ test.use({
     viewport: {width: 1020, height: 800}
 });
 
-test('Dish Network Menu Count', async ({ page }) => {
+test('Dish base Menu-Icon Count', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
     const amount:number = await basePage.getMenuItemCount()
@@ -29,28 +31,39 @@ test('Dish Base Menu Networks', async ({ page }) => {
     await basePage.clickMenuNetworks(true);
 });
 
-test('Dish Network Copyright', async ({ page, request }) => {
-    const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
-    await basePage.goto();
-    await basePage.clickMenuNetworks(true);
-    
-    const health = new DishHealthCheckAPI(request);
-    await genCheckCopyright(basePage, health, true)
-});
 
-
-test('Dish Network Menu Texts', async ({ page }) => {
-    const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
-    await basePage.goto();
-    await basePage.clickMenuNetworks(true);
-    
-    await checkMenuTextValues(basePage, true)
-});
-
-test('Dish Base Network Text', async ({ page }) => {
+test('Dish base-Network Text', async ({ page }) => {
     const basePage = new DishAnywhereBasePage(page, webBaseUrl, webApiEnv);
     await basePage.goto();
     await basePage.clickMenuIcon();
     let menuText = await basePage.menuNetworksText();
+    expect(menuText).toBe("Networks")
+});
+
+test('Dish Base GoTo Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+});
+
+test('Dish Network Copyright', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto()
+    
+    const health = new DishHealthCheckAPI(request);
+    await genCheckCopyright(networkPage, health, true)
+});
+
+test('Dish Network Menu Texts', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto();
+    
+    await checkMenuTextValues(networkPage, true)
+});
+
+test('Dish Network Menu Extra Text', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+    await networkPage.clickMenuIcon();
+    let menuText = await networkPage.menuNetworksText();
     expect(menuText).toBe("Networks")
 });
