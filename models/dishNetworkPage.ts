@@ -18,8 +18,6 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
          // #top-menu > div.cl.cq.cr.cs.ct.cu.cv.cw.cx.h.i.j.k.l.n.u.w.x > span
         this.topTopmenu = page.locator('div#top-menu')
         this.topNetwork = this.topTopmenu.locator('div > span');
-
-
     }
 
     async goto(debug?:boolean):Promise<void> {
