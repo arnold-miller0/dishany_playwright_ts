@@ -186,4 +186,12 @@ export class DishAnywhereBasePage {
     async menuSignInText(): Promise<string> {
         return await this._getItemText(this.menuSignIn)
     }
+
+    async getLocColor(loc:Locator):Promise<string> {
+        return await loc.evaluate((el) => {
+            const style = window.getComputedStyle(el);
+             return style.color; // e.g., "rgb(255, 0, 0)"
+        });
+    }
+
 }
