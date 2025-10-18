@@ -62,24 +62,38 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         if (debug) console.log('Top Network Text RGB color:', rgbColor);
         expect(rgbColor).toBe(this._topNetColor);
 
-        await this.setNetTitleInfo(debug)
+        await this._setNetTitleInfo(debug)
         expect(this._netTitleText).toBe(this._networkText);
 
         await this.checNetworkFiltersText();
+       
+        // TODO uncomment after define method
+        // await this.checkNetworkCount();
 
-        // TODO put into own test with displayed network count vs title count
-        // Rule 0 title count has "No results found"
-        // Rule >0 title count has Display networks
-        // displayed network or No results in <div id="networks-grid" ... >
-        await this.clickUnLockOnly();
-        await this.clickLiveOnly();
-        await this.clickMovieOnly();
-        await this.clickMovieOnly();
-        await this.clickLatinoOnly();
-        await this.clickLiveOnly();
+        // TODO Seperate test with different set network filter value
+        await this.setAllFilters(true, false, false, false)
+        await this.setNetTitleCount(true)
+        await this.checNetworkFiltersText();
+
+        await this.setAllFilters(false, false, true, false)
+        await this.setNetTitleCount(true)
+        await this.checNetworkFiltersText();
+
+        await this.setAllFilters(false, false, false, true)
+        await this.setNetTitleCount(true)
+        await this.checNetworkFiltersText();
+        
+        await this.setAllFilters(false, false, false, false)
+        await this.setNetTitleCount(true)
+        await this.checNetworkFiltersText();
+
+        await this.setAllFilters(false, true, false, false)
+        await this.setNetTitleCount(true)
+        await this.checNetworkFiltersText();
+    
     }
 
-    private async setNetTitleInfo(debug?:boolean):Promise<number> {
+    private async _setNetTitleInfo(debug?:boolean):Promise<number> {
         const numAndTitle:string = await this.networksTitle.innerText();
         this._netTitleText = numAndTitle.split(" ")[1]
         this._netTitleCount = Number(numAndTitle.split(" ")[0])
@@ -87,58 +101,56 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         return this._netTitleCount
     }
 
-    private async setNetTitleCount(debug?:boolean):Promise<number> {
+    async setNetTitleCount(debug?:boolean):Promise<number> {
         const numAndTitle:string = await this.networksTitle.innerText();
         this._netTitleCount = Number(numAndTitle.split(" ")[0])
         if (debug) console.log(this._networkText, "listed:", this._netTitleCount);
         return this._netTitleCount
     }
 
-    private async filterNetworkInfo(filter:Locator, expText?:string):Promise<void> {
+    private async _filterNetworkInfo(filter:Locator, expText?:string):Promise<void> {
         const dataText =  await filter.locator('div').nth(0).getAttribute('data-test-id');
         const filterText:string = await filter.locator('span').innerText();
-          console.log(filterText, " status: ", dataText?.split('-')[1]);
+        console.log(filterText, " status:", dataText?.split('-')[1]);
         if (expText) {
-            // Web text has "&nbsp;" unicode '\u00A0'; Exp text has ' '
+            // Web-text has "&nbsp;" unicode '\u00A0'; Exp-text has " " unicode `\0020` (hex 20)
             const repText = filterText.replaceAll('\u00A0',' ');
             expect(repText).toBe(expText);
         }
-      
+    }
+
+    async setAllFilters(liveOn:boolean, unlockedOn:boolean, latinoOn:boolean, movieOn:boolean)
+    :Promise<void> {
+        await this._setNetworkFilter(this.liveOnlyFilter, liveOn)
+        await this._setNetworkFilter(this.unlockOnlyFilter, unlockedOn)
+        await this._setNetworkFilter(this.latinoOnlyFilter, latinoOn)
+        await this._setNetworkFilter(this.movieOnlyFilter, movieOn)
+    }
+
+    private async _setNetworkFilter(filter:Locator, onOff:boolean):Promise<void> {
+        const dataText =  await filter.locator('div').nth(0).getAttribute('data-test-id');
+        const initValue = dataText?.split('-')[1];
+        if (onOff && initValue !== 'checked') {
+           await filter.locator('div').nth(0).click();
+        } else if (initValue == 'checked') {
+            await filter.locator('div').nth(0).click();
+        }
     }
 
     async checNetworkFiltersText():Promise<void> {
-        await this.filterNetworkInfo(this.liveOnlyFilter, this._liveOnlyText);
-        await this.filterNetworkInfo(this.unlockOnlyFilter, this._unlockOnlyText);
-        await this.filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
-        await this.filterNetworkInfo(this.movieOnlyFilter, this._movieOnlyText);
-    }
-
-    private async clickNetworkFilter(netLoc:Locator):Promise<void> {
-        await this.setNetTitleCount(true);
-        await this.filterNetworkInfo(netLoc);
-        await netLoc.locator('div').nth(0).click();
-        await this.filterNetworkInfo(netLoc);
-        await this.setNetTitleCount(true);
-    }
-
-    async clickLiveOnly():Promise<void> {
-        await this.clickNetworkFilter(this.liveOnlyFilter);
-    }
-
-    async clickUnLockOnly():Promise<void> {
-        await this.clickNetworkFilter(this.unlockOnlyFilter);
-    }
-
-    async clickLatinoOnly():Promise<void> {
-        await this.clickNetworkFilter(this.latinoOnlyFilter);
+        await this._filterNetworkInfo(this.liveOnlyFilter, this._liveOnlyText);
+        await this._filterNetworkInfo(this.unlockOnlyFilter, this._unlockOnlyText);
+        await this._filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
+        await this._filterNetworkInfo(this.movieOnlyFilter, this._movieOnlyText);
     }
 
     
-    async clickMovieOnly():Promise<void> {
-        await this.clickNetworkFilter(this.movieOnlyFilter);
-    }
-
+    // TODO put into own test with displayed network count vs title count
+    // Rule 0 title count has "No results found"
+    // Rule >0 title count has Display networks
+    // displayed network or No results in <div id="networks-grid" ... >
     async checkNetworkCount():Promise<void> {
+        false
     }
 
 
