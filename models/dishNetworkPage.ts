@@ -15,16 +15,23 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     readonly latinoOnlyFilter:Locator
     readonly movieOnlyFilter:Locator
 
+    // Displayed Networks 
+    readonly displayNetworkTop:Locator;
+    readonly displayNetworkItems:Locator;
+
+
 
     private readonly _topNetText:string = 'NETWORKS';
     private readonly _topNetColor:string  = 'rgb(228, 25, 50)';
     private readonly _networkText:string  = 'Networks';
+
     private _netTitleCount:number = -1;
     private _netTitleText:string = "";
-    private _liveOnlyText:string = "Show Live Networks Only";
-    private _unlockOnlyText:string = "Show Unlocked Only";
-    private _latinoOnlyText:string = "Show Latino Networks Only";
-    private _movieOnlyText:string = "Show DISH Movie Pack Only";
+
+    private readonly _liveOnlyText:string = "Show Live Networks Only";
+    private readonly _unlockOnlyText:string = "Show Unlocked Only";
+    private readonly _latinoOnlyText:string = "Show Latino Networks Only";
+    private readonly _movieOnlyText:string = "Show DISH Movie Pack Only";
    
 
     constructor(page: Page, baseURL: string, webEnv: string) {
@@ -40,6 +47,8 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         this.latinoOnlyFilter = page.locator('[data-test-id="networks-filter-latino-checkbox"]');
         this.movieOnlyFilter = page.locator('[data-test-id="networks-filter-dmp-checkbox"]');
 
+        this.displayNetworkTop = page.locator('div#networks-grid');
+        this.displayNetworkItems= this.displayNetworkTop.locator('div#poster-tile-container');
     }
 
     async goto(debug?:boolean):Promise<void> {
@@ -56,38 +65,40 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         await this.setNetTitleInfo(debug)
         expect(this._netTitleText).toBe(this._networkText);
 
-        await this.filterNetworkInfo(this.liveOnlyFilter, this._liveOnlyText);
-        await this.filterNetworkInfo(this.unlockOnlyFilter, this._unlockOnlyText);
-        await this.filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
-        await this.filterNetworkInfo(this.movieOnlyFilter, this._movieOnlyText);
+        await this.checNetworkFiltersText();
 
         // TODO put into own test with displayed network count vs title count
         // Rule 0 title count has "No results found"
         // Rule >0 title count has Display networks
         // displayed network or No results in <div id="networks-grid" ... >
-        await this.clickUnlockFilter();
+        await this.clickUnLockOnly();
+        await this.clickLiveOnly();
+        await this.clickMovieOnly();
+        await this.clickMovieOnly();
+        await this.clickLatinoOnly();
+        await this.clickLiveOnly();
     }
 
-    async setNetTitleInfo(debug?:boolean):Promise<void> {
-        const numAndTitle:string = await this.networksTitle.innerText()
+    private async setNetTitleInfo(debug?:boolean):Promise<number> {
+        const numAndTitle:string = await this.networksTitle.innerText();
         this._netTitleText = numAndTitle.split(" ")[1]
         this._netTitleCount = Number(numAndTitle.split(" ")[0])
         if (debug) console.log(this._networkText, "listed:", this._netTitleCount);
-    }
-
-    async getNetTitleText():Promise<string> {
-        return this._netTitleText
-    }
-
-    async getNetTitleCount():Promise<number> {
         return this._netTitleCount
     }
 
-    async filterNetworkInfo(filter:Locator, expText:string):Promise<void> {
+    private async setNetTitleCount(debug?:boolean):Promise<number> {
+        const numAndTitle:string = await this.networksTitle.innerText();
+        this._netTitleCount = Number(numAndTitle.split(" ")[0])
+        if (debug) console.log(this._networkText, "listed:", this._netTitleCount);
+        return this._netTitleCount
+    }
+
+    private async filterNetworkInfo(filter:Locator, expText?:string):Promise<void> {
         const dataText =  await filter.locator('div').nth(0).getAttribute('data-test-id');
         const filterText:string = await filter.locator('span').innerText();
           console.log(filterText, " status: ", dataText?.split('-')[1]);
-        if (expText != '') {
+        if (expText) {
             // Web text has "&nbsp;" unicode '\u00A0'; Exp text has ' '
             const repText = filterText.replaceAll('\u00A0',' ');
             expect(repText).toBe(expText);
@@ -95,13 +106,41 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
       
     }
 
-    async clickUnlockFilter():Promise<void> {
-        await this.setNetTitleInfo(true);
-        await this.filterNetworkInfo(this.unlockOnlyFilter, "");
-        await this.unlockOnlyFilter.locator('div').nth(0).click();
-        await this.filterNetworkInfo(this.unlockOnlyFilter, "");
-        await this.setNetTitleInfo(true);
+    async checNetworkFiltersText():Promise<void> {
+        await this.filterNetworkInfo(this.liveOnlyFilter, this._liveOnlyText);
+        await this.filterNetworkInfo(this.unlockOnlyFilter, this._unlockOnlyText);
+        await this.filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
+        await this.filterNetworkInfo(this.movieOnlyFilter, this._movieOnlyText);
     }
+
+    private async clickNetworkFilter(netLoc:Locator):Promise<void> {
+        await this.setNetTitleCount(true);
+        await this.filterNetworkInfo(netLoc);
+        await netLoc.locator('div').nth(0).click();
+        await this.filterNetworkInfo(netLoc);
+        await this.setNetTitleCount(true);
+    }
+
+    async clickLiveOnly():Promise<void> {
+        await this.clickNetworkFilter(this.liveOnlyFilter);
+    }
+
+    async clickUnLockOnly():Promise<void> {
+        await this.clickNetworkFilter(this.unlockOnlyFilter);
+    }
+
+    async clickLatinoOnly():Promise<void> {
+        await this.clickNetworkFilter(this.latinoOnlyFilter);
+    }
+
+    
+    async clickMovieOnly():Promise<void> {
+        await this.clickNetworkFilter(this.movieOnlyFilter);
+    }
+
+    async checkNetworkCount():Promise<void> {
+    }
+
 
 
 }

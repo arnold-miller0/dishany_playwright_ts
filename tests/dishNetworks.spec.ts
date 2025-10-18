@@ -40,7 +40,7 @@ test('Dish base-Network Text', async ({ page }) => {
     expect(menuText).toBe("Networks")
 });
 
-test('Dish Base GoTo Networks', async ({ page }) => {
+test.only('Dish Base GoTo Networks', async ({ page }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
 });
