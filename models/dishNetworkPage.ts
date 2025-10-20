@@ -32,6 +32,9 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     private readonly _unlockOnlyText:string = "Show Unlocked Only";
     private readonly _latinoOnlyText:string = "Show Latino Networks Only";
     private readonly _movieOnlyText:string = "Show DISH Movie Pack Only";
+
+    
+    private readonly _noDispNetText:string = "No results found.";
    
 
     constructor(page: Page, baseURL: string, webEnv: string) {
@@ -48,7 +51,7 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         this.movieOnlyFilter = page.locator('[data-test-id="networks-filter-dmp-checkbox"]');
 
         this.displayNetworkTop = page.locator('div#networks-grid');
-        this.displayNetworkItems= this.displayNetworkTop.locator('div#poster-tile-container');
+        this.displayNetworkItems = this.displayNetworkTop.locator('div#poster-tile-container');
     }
 
     async goto(debug?:boolean):Promise<void> {
@@ -65,31 +68,7 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         await this._setNetTitleInfo(debug)
         expect(this._netTitleText).toBe(this._networkText);
 
-        await this.checNetworkFiltersText();
-       
-        // TODO uncomment after define method
-        // await this.checkNetworkCount();
-
-        // TODO Seperate test with different set network filter value
-        await this.setAllFilters(true, false, false, false)
-        await this.setNetTitleCount(true)
-        await this.checNetworkFiltersText();
-
-        await this.setAllFilters(false, false, true, false)
-        await this.setNetTitleCount(true)
-        await this.checNetworkFiltersText();
-
-        await this.setAllFilters(false, false, false, true)
-        await this.setNetTitleCount(true)
-        await this.checNetworkFiltersText();
-        
-        await this.setAllFilters(false, false, false, false)
-        await this.setNetTitleCount(true)
-        await this.checNetworkFiltersText();
-
-        await this.setAllFilters(false, true, false, false)
-        await this.setNetTitleCount(true)
-        await this.checNetworkFiltersText();
+        await this.checkNetworkFiltersText();
     
     }
 
@@ -137,7 +116,7 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         }
     }
 
-    async checNetworkFiltersText():Promise<void> {
+    async checkNetworkFiltersText():Promise<void> {
         await this._filterNetworkInfo(this.liveOnlyFilter, this._liveOnlyText);
         await this._filterNetworkInfo(this.unlockOnlyFilter, this._unlockOnlyText);
         await this._filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
@@ -145,12 +124,30 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     }
 
     
+    async dispNetworkFiltersText():Promise<void> {
+        await this._filterNetworkInfo(this.liveOnlyFilter);
+        await this._filterNetworkInfo(this.unlockOnlyFilter);
+        await this._filterNetworkInfo(this.latinoOnlyFilter);
+        await this._filterNetworkInfo(this.movieOnlyFilter);
+    }
+
+    
     // TODO put into own test with displayed network count vs title count
     // Rule 0 title count has "No results found"
     // Rule >0 title count has Display networks
     // displayed network or No results in <div id="networks-grid" ... >
-    async checkNetworkCount():Promise<void> {
-        false
+    async checkNetworkCount():Promise<number> {
+        await this.setNetTitleCount(true);
+        if (this._netTitleCount == 0) {
+            const dispNetText = await this.displayNetworkTop.locator("div > span").innerText();
+            // console.log("Display Network Text:", dispNetText);
+            expect(dispNetText).toBe(this._noDispNetText)
+        } else {
+            const dispNetCount = await this.displayNetworkItems.count()
+            // console.log("Display Network count:", dispNetCount)
+            expect(dispNetCount).toBe(this._netTitleCount)
+        }
+        return this._netTitleCount;
     }
 
 

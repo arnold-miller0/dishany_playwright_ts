@@ -40,7 +40,7 @@ test('Dish base-Network Text', async ({ page }) => {
     expect(menuText).toBe("Networks")
 });
 
-test.only('Dish Base GoTo Networks', async ({ page }) => {
+test('Dish Base GoTo Networks', async ({ page }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
 });
@@ -66,4 +66,64 @@ test('Dish Network Menu Extra Text', async ({ page }) => {
     await networkPage.clickMenuIcon();
     let menuText = await networkPage.menuNetworksText();
     expect(menuText).toBe("Networks")
+});
+
+
+test('Dish Network Init Count Initial Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+    // Count inital same as count unlocked Networks, since not login-ed
+    await networkPage.checkNetworkCount();
+
+});
+
+test('Dish Network Count only Live Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(true, false, false, false)
+    await networkPage.dispNetworkFiltersText();
+    await networkPage.checkNetworkCount();
+});
+
+
+test('Dish Network Count only Latino Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(false, false, true, false)
+    await networkPage.dispNetworkFiltersText();
+    await networkPage.checkNetworkCount();
+});
+
+
+test('Dish Network Count only Movie Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(false, false, false, true)
+    await networkPage.dispNetworkFiltersText();
+    await networkPage.checkNetworkCount();
+});
+
+
+test('Dish Network Count All Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(false, false, false, false)
+    await networkPage.dispNetworkFiltersText();
+    await networkPage.checkNetworkCount();
+});
+
+
+test('Dish Network Count all-checked Networks', async ({ page }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(true, true, true, true)
+    await networkPage.dispNetworkFiltersText();
+    const dispCount = await networkPage.checkNetworkCount();
+    // Should display 0 networks, since there Latino Dish Movie Pack networks
+    expect(dispCount).toBe(0)
 });
