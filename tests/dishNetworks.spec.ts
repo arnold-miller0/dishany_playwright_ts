@@ -4,9 +4,11 @@ import { DishAnywhereBasePage } from '../models/dishBasePage';
 import { DishAnywhereNetworkPage } from '../models/dishNetworkPage';
  
 import { DishHealthCheckAPI } from '../models/dishHealthCheck';
+import { DishNetworksAPI } from '../models/dishNetworksApi';
 import { genCheckCopyright,  checkMenuTextValues } from './dishHelper';
 
 const webBaseUrl = "https://www.dishanywhere.com";
+const apiBaseUrl = "https://radish.dishanywhere.com/";
 const webApiEnv = 'production';
 
 // Menu Icon only displayed on screen with width <= 1024
@@ -69,11 +71,15 @@ test('Dish Network Menu Extra Text', async ({ page }) => {
 });
 
 
-test('Dish Network Init Count Initial Networks', async ({ page }) => {
+test.only('Dish Network Count Initial Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
-    // Count inital same as count unlocked Networks, since not login-ed
+    // Count inital same as count unlocked Networks, since logged out
     await networkPage.checkNetworkCount();
+
+    const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
+    const allNetworkObjs = await networkAPI.setAllNetworkObjs();
+    console.log(allNetworkObjs.getTitle(), "count:", allNetworkObjs.getObjList().length);
 
 });
 
