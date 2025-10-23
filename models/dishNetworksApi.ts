@@ -52,7 +52,7 @@ export class DishNetworksAPI {
 
     async setAllNetworkObjs(
         debug?:boolean
-    ): Promise<DishNetworkObjs> {
+    ): Promise<void> {
         const url = "v20/dol/networks/home.json"
         const params = new URLSearchParams({
             // totalItems: '15'
@@ -71,7 +71,7 @@ export class DishNetworksAPI {
         // check that index is integer; >= 0 and < data.length
 
 
-        const disNetworkObjs = new DishNetworkObjs("All Networks");
+        const networkObjs = new DishNetworkObjs("All Networks");
     
         const itemCount = itemList.length;
         if (debug) console.log(`All count: ${itemCount};`);
@@ -87,13 +87,53 @@ export class DishNetworksAPI {
             const imgSrc = itemJson.logo
             const objItem = new DishNetworkObj(title, slug, net_id, 
                 is_live, is_locked, is_latino, is_movie, imgSrc)
-            disNetworkObjs.addNetworkObj(objItem);
+            networkObjs.addNetworkObj(objItem);
             if (debug) {
                 console.log(`${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
                 console.log(`${title} item[${j}]: ${imgSrc}; `)
             }
         }
-        return disNetworkObjs;
+        this._allNetworkObjs = networkObjs;
+    }
+
+    filterNetList(
+        filTitle:string,
+        live:boolean,
+        unlocked:boolean,
+        latino:boolean,
+        movie:boolean,
+        debug?:boolean
+    ): DishNetworkObjs {
+        const fliNetObjs = new DishNetworkObjs(filTitle);
+
+        const itemList = this._allNetworkObjs.getObjList();
+        if (debug) { console.log(`all list has ${itemList.length} objs`)}
+        const itemCount = itemList.length;
+         for (let j = 0; j < itemCount; j++) {
+            const itemJson:DishNetworkObj = itemList[j]
+            const title = itemJson.getTitle();
+            const slug = itemJson.getSlug();
+            const net_id = itemJson.getNetId();
+            const is_live = itemJson.getIsLive();
+            const is_locked = itemJson.getIslocked();
+            const is_latino = itemJson.getIsLatino()
+            const is_movie = itemJson.getIsMovie();
+            const imgSrc = itemJson.getIsImgSrc();
+
+            if ((is_live == live)
+                && (is_locked != unlocked)
+                && (is_latino == latino)
+                && (is_movie == movie)
+            ) {
+                const objItem = new DishNetworkObj(title, slug, net_id, 
+                is_live, is_locked, is_latino, is_movie, imgSrc)
+            fliNetObjs.addNetworkObj(objItem);
+            if (debug) {
+                console.log(`matched: ${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
+                 }
+            }
+         }
+        return fliNetObjs
     }
 
 

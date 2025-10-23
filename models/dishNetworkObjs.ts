@@ -59,6 +59,10 @@ export class DishNetworkObj {
     getIsMovie():boolean {
         return this._is_movie;
     }
+    
+    getIsImgSrc():string {
+        return this._imgSrc;
+    }
 
     equal(other:DishNetworkObj)
     :boolean {
