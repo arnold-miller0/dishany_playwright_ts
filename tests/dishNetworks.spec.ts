@@ -11,6 +11,12 @@ const webBaseUrl = "https://www.dishanywhere.com";
 const apiBaseUrl = "https://radish.dishanywhere.com/";
 const webApiEnv = 'production';
 
+const doDebug = true; 
+const filLive = true;   // Filter Live only Networks
+const filUnlock = true; // Filter Unlocked only Networks
+const filLatino = true; // Filter Latino only Networks
+const filMovie = true; // Filter Moive only Networks
+
 // Menu Icon only displayed on screen with width <= 1024
 // Need to click on Menu Icon to display Menu Options
 // Menu Networks only with Menu Icon not with Menu List
@@ -75,65 +81,82 @@ test('Dish Network Count Initial Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
     // Count inital same as count unlocked Networks, since logged out
-    await networkPage.checkNetworkCount();
-
-    const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
-    await networkAPI.setAllNetworkObjs();
-
-});
-
-test('Dish Network Count only Live Networks', async ({ page, request }) => {
-    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
-    await networkPage.goto(true);
-
-    await networkPage.setAllFilters(true, false, false, false)
-    await networkPage.dispNetworkFiltersText();
-    await networkPage.checkNetworkCount();
+    const webNetCount = await networkPage.checkNetworkCount();
+    console.log("Web only Live", "count:", webNetCount);
 
     const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
     await networkAPI.setAllNetworkObjs();
     const allNetworkObjs = networkAPI.getAllNetworkObjs();
     console.log(allNetworkObjs.getTitle(), "count:", allNetworkObjs.getObjList().length);
 
-    const liveOnlyList = networkAPI.filterNetList("only Live", true, false, false, false, true);
-    console.log(liveOnlyList.getTitle(), "count:", liveOnlyList .getObjList().length);
+    const apiNetList = networkAPI.filterNetList("only Unliocked", !filLive, filUnlock, !filLatino, 
+        !filMovie);
+    console.log(apiNetList.getTitle(), "count:", apiNetList .getObjList().length);
+    expect(webNetCount).toBe(apiNetList.getObjList().length)
 
-   // const unlockedList = networkAPI.filterNetList("only unlocked", false, true, false, false, true);
-   // console.log(unlockedList.getTitle(), "count:", unlockedList.getObjList().length);
-
-    // const latinoList = networkAPI.filterNetList("only latino", false, false, true, false, true);
-    // console.log(latinoList.getTitle(), "count:", latinoList.getObjList().length);
-
-    // const movieList = networkAPI.filterNetList("only movie", false, false, false, true, true);
-    // console.log(movieList.getTitle(), "count:", movieList.getObjList().length);
 });
 
-
-test('Dish Network Count only Latino Networks', async ({ page }) => {
+test.only('Dish Network Count only Live Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
 
-    await networkPage.setAllFilters(false, false, true, false)
+    await networkPage.setAllFilters(filLive, !filUnlock, !filLatino, !filMovie)
     await networkPage.dispNetworkFiltersText();
-    await networkPage.checkNetworkCount();
-});
-
-
-test.only('Dish Network Count only Movie Networks', async ({ page, request }) => {
-    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
-    await networkPage.goto(true);
-
-    await networkPage.setAllFilters(false, false, false, true)
-    await networkPage.dispNetworkFiltersText();
-    await networkPage.checkNetworkCount();
+    const webNetCount = await networkPage.checkNetworkCount();
+    console.log("Web only Live", "count:", webNetCount);
 
     const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
     await networkAPI.setAllNetworkObjs();
     const allNetworkObjs = networkAPI.getAllNetworkObjs();
     console.log(allNetworkObjs.getTitle(), "count:", allNetworkObjs.getObjList().length);
 
-    const movieList = networkAPI.filterNetList("only movie", false, false, false, true, true);
-    console.log(movieList.getTitle(), "count:", movieList.getObjList().length);
+    const apiNetList = networkAPI.filterNetList("only Live", filLive, !filUnlock, !filLatino, 
+        !filMovie);
+    console.log(apiNetList.getTitle(), "count:", apiNetList .getObjList().length);
+    expect(webNetCount).toBe(apiNetList.getObjList().length)
+
+});
+
+
+test('Dish Network Count only Latino Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(!filLive, !filUnlock, filLatino, !filMovie)
+    await networkPage.dispNetworkFiltersText();
+    const webNetCount = await networkPage.checkNetworkCount();
+    console.log("Web only Latino", "count:", webNetCount);
+
+    const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
+    await networkAPI.setAllNetworkObjs();
+    const allNetworkObjs = networkAPI.getAllNetworkObjs();
+    console.log(allNetworkObjs.getTitle(), "count:", allNetworkObjs.getObjList().length);
+
+    const apiNetList = networkAPI.filterNetList("only Latino", !filLive, !filUnlock, filLatino, 
+        !filMovie);
+    console.log(apiNetList.getTitle(), "count:", apiNetList.getObjList().length);
+    expect(webNetCount).toBe(apiNetList.getObjList().length)
+});
+
+
+test('Dish Network Count only Movie Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto(true);
+
+    await networkPage.setAllFilters(!filLive, !filUnlock, !filLatino, filMovie)
+    await networkPage.dispNetworkFiltersText();
+    const webNetCount = await networkPage.checkNetworkCount();
+    console.log("Web only Live", "count:", webNetCount);
+
+    const networkAPI = new DishNetworksAPI(request, apiBaseUrl);
+    await networkAPI.setAllNetworkObjs();
+    const allNetworkObjs = networkAPI.getAllNetworkObjs();
+    console.log(allNetworkObjs.getTitle(), "count:", allNetworkObjs.getObjList().length);
+
+    const apiNetList = networkAPI.filterNetList("only movie", !filLive, !filUnlock, !filLatino, 
+        filMovie, !doDebug);
+    console.log(apiNetList.getTitle(), "count:", apiNetList.getObjList().length);
+    expect(webNetCount).toBe(apiNetList.getObjList().length)
 });
 
 
@@ -141,7 +164,7 @@ test('Dish Network Count All Networks', async ({ page }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
 
-    await networkPage.setAllFilters(false, false, false, false)
+    await networkPage.setAllFilters(!filLive, !filUnlock, !filLatino, !filMovie)
     await networkPage.dispNetworkFiltersText();
     await networkPage.checkNetworkCount();
 });
@@ -151,7 +174,7 @@ test('Dish Network Count all-checked Networks', async ({ page }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(true);
 
-    await networkPage.setAllFilters(true, true, true, true)
+    await networkPage.setAllFilters(filLive, filUnlock, filLatino, filMovie)
     await networkPage.dispNetworkFiltersText();
     const dispCount = await networkPage.checkNetworkCount();
     // Should display 0 networks, since there Latino Dish Movie Pack networks

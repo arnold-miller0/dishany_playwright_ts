@@ -108,6 +108,8 @@ export class DishNetworksAPI {
 
         const itemList = this._allNetworkObjs.getObjList();
         if (debug) { console.log(`all list has ${itemList.length} objs`)}
+
+
         const itemCount = itemList.length;
          for (let j = 0; j < itemCount; j++) {
             const itemJson:DishNetworkObj = itemList[j]
@@ -120,11 +122,13 @@ export class DishNetworksAPI {
             const is_movie = itemJson.getIsMovie();
             const imgSrc = itemJson.getIsImgSrc();
 
-            if ((is_live == live)
-                && (is_locked != unlocked)
-                && (is_latino == latino)
-                && (is_movie == movie)
-            ) {
+            const live_match = live?is_live:true;
+            const unlc_match = unlocked?!is_locked:true;
+            const lati_match = latino?is_latino:true;
+            const movi_match = movie?is_movie:true;
+
+            if (  live_match && unlc_match && lati_match && movi_match)
+            {
                 const objItem = new DishNetworkObj(title, slug, net_id, 
                 is_live, is_locked, is_latino, is_movie, imgSrc)
             fliNetObjs.addNetworkObj(objItem);
