@@ -6,7 +6,7 @@ interface NetworkJson {
     name: string;  // obj title
     slug: string;  // obj slug
     network_id: number; // obj net_id
-    has_live_content: boolean; // obj is_live
+    has_stream: boolean; // obj is_live
     is_locked: boolean; // obj is_locked
     is_latino_package_network: boolean; // obj is_latino
     is_bb: boolean; // obj is_movie
@@ -34,7 +34,7 @@ export class DishNetworksAPI {
     ) {
         this._request = request;
         this._ApiBaseURL = baseURL;
-        this._allNetworkObjs = new DishNetworkObjs("All Networks");
+        this._allNetworkObjs = new DishNetworkObjs("All API Networks");
     }
     
     getApiBaseURL(): string {
@@ -71,7 +71,7 @@ export class DishNetworksAPI {
         // check that index is integer; >= 0 and < data.length
 
 
-        const networkObjs = new DishNetworkObjs("All Networks");
+        const networkObjs = new DishNetworkObjs("All API Networks");
     
         const itemCount = itemList.length;
         if (debug) console.log(`All count: ${itemCount};`);
@@ -80,7 +80,7 @@ export class DishNetworksAPI {
             const title = itemJson.name;
             const slug = itemJson.slug;
             const net_id = itemJson.network_id;
-            const is_live = itemJson.has_live_content;
+            const is_live = itemJson.has_stream;
             const is_locked = itemJson.is_locked;
             const is_latino = itemJson.is_latino_package_network;
             const is_movie = itemJson.is_bb;
@@ -127,14 +127,13 @@ export class DishNetworksAPI {
             const lati_match = latino?is_latino:true;
             const movi_match = movie?is_movie:true;
 
-            if (  live_match && unlc_match && lati_match && movi_match)
-            {
+            if ( live_match && unlc_match && lati_match && movi_match) {
                 const objItem = new DishNetworkObj(title, slug, net_id, 
                 is_live, is_locked, is_latino, is_movie, imgSrc)
-            fliNetObjs.addNetworkObj(objItem);
-            if (debug) {
-                console.log(`matched: ${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
-                 }
+                fliNetObjs.addNetworkObj(objItem);
+                if (debug) {
+                    console.log(`matched: ${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
+                }
             }
          }
         return fliNetObjs

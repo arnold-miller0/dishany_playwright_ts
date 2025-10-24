@@ -3,7 +3,7 @@ export class DishNetworkObj {
     private _title:string;      // via name
     private _slug:string;       // via slug
     private _net_id:number; // via network_id
-    private  is_live:boolean;   // via has_live_content
+    private  is_live:boolean;   // via has_stream
     private _is_locked:boolean; // via is_locked
     private _is_latino:boolean; // via is_latino_package_network
     private _is_movie:boolean;  // via is_bb

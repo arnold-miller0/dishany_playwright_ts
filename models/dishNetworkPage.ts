@@ -90,7 +90,7 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     private async _filterNetworkInfo(filter:Locator, expText?:string):Promise<void> {
         const dataText =  await filter.locator('div').nth(0).getAttribute('data-test-id');
         const filterText:string = await filter.locator('span').innerText();
-        console.log(filterText, " status:", dataText?.split('-')[1]);
+        console.log(filterText, "status:", dataText?.split('-')[1]);
         if (expText) {
             // Web-text has "&nbsp;" unicode '\u00A0'; Exp-text has " " unicode `\0020` (hex 20)
             const repText = filterText.replaceAll('\u00A0',' ');
@@ -98,7 +98,8 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         }
     }
 
-    async setAllFilters(liveOn:boolean, unlockedOn:boolean, latinoOn:boolean, movieOn:boolean)
+    async setAllFilters(liveOn:boolean, unlockedOn:boolean, latinoOn:boolean, movieOn:boolean
+    )
     :Promise<void> {
         await this._setNetworkFilter(this.liveOnlyFilter, liveOn)
         await this._setNetworkFilter(this.unlockOnlyFilter, unlockedOn)
@@ -109,9 +110,9 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     private async _setNetworkFilter(filter:Locator, onOff:boolean):Promise<void> {
         const dataText =  await filter.locator('div').nth(0).getAttribute('data-test-id');
         const initValue = dataText?.split('-')[1];
-        if (onOff && initValue !== 'checked') {
+        if (onOff && initValue != 'checked') {
            await filter.locator('div').nth(0).click();
-        } else if (initValue == 'checked') {
+        } else if (!onOff && initValue == 'checked') {
             await filter.locator('div').nth(0).click();
         }
     }
@@ -132,19 +133,13 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     }
 
     
-    // TODO put into own test with displayed network count vs title count
-    // Rule 0 title count has "No results found"
-    // Rule >0 title count has Display networks
-    // displayed network or No results in <div id="networks-grid" ... >
     async checkNetworkCount():Promise<number> {
-        await this.setNetTitleCount(true);
+        await this.setNetTitleCount();
         if (this._netTitleCount == 0) {
             const dispNetText = await this.displayNetworkTop.locator("div > span").innerText();
-            // console.log("Display Network Text:", dispNetText);
             expect(dispNetText).toBe(this._noDispNetText)
         } else {
             const dispNetCount = await this.displayNetworkItems.count()
-            // console.log("Display Network count:", dispNetCount)
             expect(dispNetCount).toBe(this._netTitleCount)
         }
         return this._netTitleCount;
