@@ -26,15 +26,15 @@ export class DishNetworksAPI {
 
     private _ApiBaseURL; 
 
-    private _allNetworkObjs: DishNetworkObjs;
-
+    private _allNetworkObjs: DishNetworkObjs = new DishNetworkObjs("All API Networks");
+ 
     constructor(
         request: APIRequestContext,
         baseURL: string
     ) {
         this._request = request;
         this._ApiBaseURL = baseURL;
-        this._allNetworkObjs = new DishNetworkObjs("All API Networks");
+        this._initNetListObjs();
     }
     
     getApiBaseURL(): string {
@@ -49,6 +49,10 @@ export class DishNetworksAPI {
         return this.getAllNetworkObjs().getTitle();
     }
 
+
+    private _initNetListObjs():void {
+        this._allNetworkObjs = new DishNetworkObjs("All API Networks");
+    }
 
     async setAllNetworkObjs(
         debug?:boolean
@@ -70,9 +74,8 @@ export class DishNetworksAPI {
         const itemList:NetworkJson[] = await response.json()
         // check that index is integer; >= 0 and < data.length
 
+        this._initNetListObjs();
 
-        const networkObjs = new DishNetworkObjs("All API Networks");
-    
         const itemCount = itemList.length;
         if (debug) console.log(`All count: ${itemCount};`);
         for (let j = 0; j < itemCount; j++) {
@@ -87,29 +90,25 @@ export class DishNetworksAPI {
             const imgSrc = itemJson.logo
             const objItem = new DishNetworkObj(title, slug, net_id, 
                 is_live, is_locked, is_latino, is_movie, imgSrc)
-            networkObjs.addNetworkObj(objItem);
+            this._allNetworkObjs.addNetworkObj(objItem);
             if (debug) {
                 console.log(`${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
                 console.log(`${title} item[${j}]: ${imgSrc}; `)
             }
         }
-        this._allNetworkObjs = networkObjs;
     }
 
     filterNetList(
-        filTitle:string,
+        filterTitle:string,
         live:boolean,
         unlocked:boolean,
         latino:boolean,
         movie:boolean,
         debug?:boolean
     ): DishNetworkObjs {
-        const fliNetObjs = new DishNetworkObjs(filTitle);
-
-        const itemList = this._allNetworkObjs.getObjList();
+        const filterNetObjs = new DishNetworkObjs(filterTitle);
+        let itemList = this._allNetworkObjs.getObjList();
         if (debug) { console.log(`all list has ${itemList.length} objs`)}
-
-
         const itemCount = itemList.length;
          for (let j = 0; j < itemCount; j++) {
             const itemJson:DishNetworkObj = itemList[j]
@@ -130,13 +129,13 @@ export class DishNetworksAPI {
             if ( live_match && unlc_match && lati_match && movi_match) {
                 const objItem = new DishNetworkObj(title, slug, net_id, 
                 is_live, is_locked, is_latino, is_movie, imgSrc)
-                fliNetObjs.addNetworkObj(objItem);
+                filterNetObjs.addNetworkObj(objItem);
                 if (debug) {
                     console.log(`matched: ${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
                 }
             }
          }
-        return fliNetObjs
+        return filterNetObjs
     }
 
 
