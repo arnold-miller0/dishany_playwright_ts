@@ -133,9 +133,9 @@ export class DishNetworkObjs {
         this.addNetworkObj(objItem);
     }
 
-    copyObjList(debug?:boolean):DishNetworkObj[] {
-        let rtnNetObjs:DishNetworkObjs = new DishNetworkObjs("rtnNetObjs");
-        const itemCount = this.getObjList.length;
+    copyNetObjList(newTitle:string, debug?:boolean):DishNetworkObjs {
+        let rtnNetObjs:DishNetworkObjs = new DishNetworkObjs(newTitle);
+        const itemCount = this.getObjList().length;
         if (debug) {  console.log(`Copy ${itemCount} objects`) }
         for (let j = 0; j < itemCount; j++) {
             const itemObj:DishNetworkObj = this._objList[j];
@@ -151,7 +151,7 @@ export class DishNetworkObjs {
                         is_live, is_locked, is_latino, is_movie, imgSrc);
             rtnNetObjs.addNetworkObj(objItem);
         }
-        return rtnNetObjs._objList
+        return rtnNetObjs
     }
     
 }

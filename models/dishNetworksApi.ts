@@ -119,16 +119,65 @@ export class DishNetworksAPI {
         movie:boolean,
         debug?:boolean
     ): DishNetworkObjs {
-        const filterNetObjs = new DishNetworkObjs(filterTitle);
+
+       
+        
+        // if (debug) { console.log("filters:", live, unlocked, latino, movie) }
+
+        // Check Filter All Networks or only One Filter list from largest to smaillest
+        // When have Filter All Networks or only One return that filtered list
+        // Others set init-filter list to that filtered list for future matching
+        //  Check 1st Filter All Networks 
+        //  Check 2nd Filter Only Live 
+        //  Check 3rd Filter Only Latino
+        //  Check 4th Filter Only Movie
+        //  Check 5th Filter Only Unlocked
+
+        let filterNetObjs = new DishNetworkObjs(filterTitle);
         let itemList = this._allNetworkObjs.getObjList();
         if (!live && !unlocked && !latino && !movie) {
-            const rtnNetObjList: DishNetworkObj[] = this._allNetworkObjs.copyObjList()
-            filterNetObjs.setObjList(rtnNetObjList)            
-            if (debug) { console.log(`filter Network list has ${rtnNetObjList.length} objs`) }
-            return filterNetObjs
+            const rtnNetObjs = this._allNetworkObjs.copyNetObjList(filterTitle, debug)         
+            if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
+            return rtnNetObjs
         }
 
+        if (live) {
+            if (!unlocked && !latino && !movie)  {
+                const rtnNetObjs = this._liveNetObjs.copyNetObjList(filterTitle, debug)         
+                if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
+                return rtnNetObjs
+            }
+            itemList = this._liveNetObjs.getObjList();
+        }
 
+         if (latino) {
+            if (!unlocked && !live && !movie)  {
+                const rtnNetObjs = this._latinoNetObjs.copyNetObjList(filterTitle, debug)         
+                if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
+                return rtnNetObjs
+            }
+            itemList = this._latinoNetObjs.getObjList();
+        }
+
+        if (movie) {
+            if (!unlocked && !live && !latino)  {
+                const rtnNetObjs = this._movieNetObjs.copyNetObjList(filterTitle, debug)         
+                if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
+                return rtnNetObjs
+            }
+            itemList = this._movieNetObjs.getObjList();
+        }
+  
+        if (unlocked) {
+            if (!movie && !live && !latino)  {
+                const rtnNetObjs = this._unlockNetObjs.copyNetObjList(filterTitle, debug)         
+                if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
+                return rtnNetObjs
+            }
+            itemList = this._unlockNetObjs.getObjList();
+        }
+
+        // Future matching init-Filter list with all filter booleans
         const itemCount = itemList.length;
          for (let j = 0; j < itemCount; j++) {
             const itemJson:DishNetworkObj = itemList[j]

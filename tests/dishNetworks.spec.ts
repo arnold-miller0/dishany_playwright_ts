@@ -82,7 +82,7 @@ test('Dish Network Count Initial Networks', async ({ page, request }) => {
     await networkPage.goto(doDebug);
 
      await checkDispNetworkCount(request, networkPage, "Init only Unlock", 
-        !onlyLive, onlyUnlock, !onlyLatino, !onlyMovie)
+        !onlyLive, onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
 
 });
 
@@ -91,7 +91,7 @@ test('Dish Network Count only Live Networks', async ({ page, request }) => {
     await networkPage.goto();
 
     await checkDispNetworkCount(request, networkPage, "only Live", 
-        onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie)
+        onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie,!doDebug)
 
 });
 
@@ -101,7 +101,7 @@ test('Dish Network Count only Latino Networks', async ({ page, request }) => {
     await networkPage.goto();
 
     await checkDispNetworkCount(request, networkPage, "only Latino", 
-        !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie)
+        !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
 });
 
 
@@ -110,16 +110,16 @@ test('Dish Network Count only Movie Networks', async ({ page, request }) => {
     await networkPage.goto();
 
     await checkDispNetworkCount(request, networkPage, "only Movie", 
-        !onlyLive, !onlyUnlock, !onlyLatino, onlyMovie)
+        !onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !doDebug)
 });
 
 
-test.only('Dish Network Count All-Display Networks', async ({ page, request }) => {
+test('Dish Network Count All-Display Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
     await checkDispNetworkCount(request, networkPage, "All-Display", 
-        !onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie)
+        !onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
 });
 
 
@@ -128,10 +128,42 @@ test('Dish Network Count all-checked Networks', async ({ page, request }) => {
     await networkPage.goto();
 
     const disCount = await checkDispNetworkCount(request, networkPage, "All-Display", 
-        onlyLive, onlyUnlock, onlyLatino, onlyMovie)
+        onlyLive, onlyUnlock, onlyLatino, onlyMovie, !doDebug)
     // Should display 0 networks, since there Latino Dish Movie Pack networks
     expect(disCount).toBe(0)
 
+});
+
+test('Dish Network Count Live Movie Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto();
+
+    await checkDispNetworkCount(request, networkPage, "Live Movie", 
+        onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !doDebug)
+});
+
+test('Dish Network Count Live Latino Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto();
+
+    await checkDispNetworkCount(request, networkPage, "Live Latino", 
+        onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
+});
+
+test('Dish Network Count Latino Movie Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto();
+
+    await checkDispNetworkCount(request, networkPage, "Latino Movie", 
+        !onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !doDebug)
+});
+
+test('Dish Network Count Live Unlock Networks', async ({ page, request }) => {
+    const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
+    await networkPage.goto();
+
+    await checkDispNetworkCount(request, networkPage, "Live Unlock", 
+        onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !doDebug)
 });
 
 async function checkDispNetworkCount( 
@@ -154,7 +186,7 @@ async function checkDispNetworkCount(
     await networkAPI.setAllNetworkObjs();
 
     const apiNetList = networkAPI.filterNetList(`API ${dispTitle}`, 
-        isLive, isUnlock, isLatino, isMovie);
+        isLive, isUnlock, isLatino, isMovie, debug);
     console.log(apiNetList.getTitle(), "count:", apiNetList.getObjList().length);
     expect(webNetCount).toBe(apiNetList.getObjList().length)
 
