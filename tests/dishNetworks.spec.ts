@@ -114,7 +114,7 @@ test('Dish Network Count only Movie Networks', async ({ page, request }) => {
 });
 
 
-test('Dish Network Count All-Display Networks', async ({ page, request }) => {
+test.only('Dish Network Count All-Display Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 

@@ -81,14 +81,14 @@ export class DishNetworkObj {
 
 export class DishNetworkObjs {
 
-    private _title:string;
-    private _objList:DishNetworkObj[];
+    private _title:string = "";
+    private _objList:DishNetworkObj[] = [];
 
     constructor(
         title:string)
     {
         this._title = title;
-        this._objList = []
+        this.initObjList();
     }
 
     getTitle():string {
@@ -99,9 +99,15 @@ export class DishNetworkObjs {
         this._title = title
      }
 
+    initObjList():void {
+        this._objList = [];
+    }
     getObjList():DishNetworkObj[] {
         return this._objList;
-        
+    }
+
+    getListCount():number {
+        return this._objList.length;
     }
 
     setObjList(objList:DishNetworkObj[]):void {
@@ -125,6 +131,27 @@ export class DishNetworkObjs {
         const objItem = new DishNetworkObj(title, slug, net_id, 
             is_live, is_locked, is_latino, is_movie, imgSrc);
         this.addNetworkObj(objItem);
+    }
+
+    copyObjList(debug?:boolean):DishNetworkObj[] {
+        let rtnNetObjs:DishNetworkObjs = new DishNetworkObjs("rtnNetObjs");
+        const itemCount = this.getObjList.length;
+        if (debug) {  console.log(`Copy ${itemCount} objects`) }
+        for (let j = 0; j < itemCount; j++) {
+            const itemObj:DishNetworkObj = this._objList[j];
+            const title = itemObj.getTitle();
+            const slug = itemObj.getSlug();
+            const net_id = itemObj.getNetId();
+            const is_live = itemObj.getIsLive();
+            const is_locked = itemObj.getIslocked();
+            const is_latino = itemObj.getIsLatino()
+            const is_movie = itemObj.getIsMovie();
+            const imgSrc = itemObj.getIsImgSrc();
+            const objItem = new DishNetworkObj(title, slug, net_id, 
+                        is_live, is_locked, is_latino, is_movie, imgSrc);
+            rtnNetObjs.addNetworkObj(objItem);
+        }
+        return rtnNetObjs._objList
     }
     
 }

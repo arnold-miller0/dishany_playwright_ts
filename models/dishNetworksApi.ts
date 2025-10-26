@@ -27,7 +27,11 @@ export class DishNetworksAPI {
     private _ApiBaseURL; 
 
     private _allNetworkObjs: DishNetworkObjs = new DishNetworkObjs("All API Networks");
- 
+    private _liveNetObjs: DishNetworkObjs = new DishNetworkObjs("Live API Networks");
+    private _unlockNetObjs: DishNetworkObjs = new DishNetworkObjs("Unlock API Networks");
+    private _latinoNetObjs: DishNetworkObjs = new DishNetworkObjs("Latino API Networks");
+    private _movieNetObjs: DishNetworkObjs = new DishNetworkObjs("Movie API Networks");
+
     constructor(
         request: APIRequestContext,
         baseURL: string
@@ -51,7 +55,11 @@ export class DishNetworksAPI {
 
 
     private _initNetListObjs():void {
-        this._allNetworkObjs = new DishNetworkObjs("All API Networks");
+        this._allNetworkObjs.initObjList();
+        this._liveNetObjs.initObjList();
+        this._unlockNetObjs.initObjList();
+        this._latinoNetObjs.initObjList();
+        this._movieNetObjs.initObjList();
     }
 
     async setAllNetworkObjs(
@@ -92,9 +100,14 @@ export class DishNetworksAPI {
                 is_live, is_locked, is_latino, is_movie, imgSrc)
             this._allNetworkObjs.addNetworkObj(objItem);
             if (debug) {
-                console.log(`${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
-                console.log(`${title} item[${j}]: ${imgSrc}; `)
+                console.log(`${title} item[${j}]: title=${title}; slug=${slug}; bet_id=${net_id};`)
+                console.log(`\t live=${is_live}; lock=${is_locked}; latino=${is_latino}; movie=${is_movie};`)
+                console.log(`\t imgsrc=${imgSrc};`)
             }
+            if (is_live) { this._liveNetObjs.addNetworkObj(objItem)};
+            if (!is_locked) { this._unlockNetObjs.addNetworkObj(objItem)};
+            if (is_latino) { this._latinoNetObjs.addNetworkObj(objItem)};
+            if (is_movie) { this._movieNetObjs.addNetworkObj(objItem)};
         }
     }
 
@@ -108,7 +121,14 @@ export class DishNetworksAPI {
     ): DishNetworkObjs {
         const filterNetObjs = new DishNetworkObjs(filterTitle);
         let itemList = this._allNetworkObjs.getObjList();
-        if (debug) { console.log(`all list has ${itemList.length} objs`)}
+        if (!live && !unlocked && !latino && !movie) {
+            const rtnNetObjList: DishNetworkObj[] = this._allNetworkObjs.copyObjList()
+            filterNetObjs.setObjList(rtnNetObjList)            
+            if (debug) { console.log(`filter Network list has ${rtnNetObjList.length} objs`) }
+            return filterNetObjs
+        }
+
+
         const itemCount = itemList.length;
          for (let j = 0; j < itemCount; j++) {
             const itemJson:DishNetworkObj = itemList[j]
