@@ -14,12 +14,6 @@ interface NetworkJson {
 }
 
 
-interface PromoteJson { 
-        slug: string;
-        url: string;
-        image_url: string
-}
-
 export class DishNetworksAPI {
 
     private _request: APIRequestContext;
@@ -52,7 +46,6 @@ export class DishNetworksAPI {
     getAllNetworkTitle(): string {
         return this.getAllNetworkObjs().getTitle();
     }
-
 
     private _initNetListObjs():void {
         this._allNetworkObjs.initObjList();
@@ -120,8 +113,6 @@ export class DishNetworksAPI {
         debug?:boolean
     ): DishNetworkObjs {
 
-       
-        
         // if (debug) { console.log("filters:", live, unlocked, latino, movie) }
 
         // Check Filter All Networks or only One Filter list from largest to smaillest
@@ -152,7 +143,7 @@ export class DishNetworksAPI {
             initObjList = this._liveNetObjs.getObjList();
         }
 
-         if (latino) { // Only Latino Networks 
+        if (latino) { // Only Latino Networks 
             if (!unlocked && !live && !movie)  {
                 const rtnNetObjs = this._latinoNetObjs.copyNetObjList(filterTitle, debug)         
                 if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
@@ -181,7 +172,7 @@ export class DishNetworksAPI {
 
         // Now match init-Obj list with all filter booleans
         const itemCount = initObjList.length;
-         for (let j = 0; j < itemCount; j++) {
+        for (let j = 0; j < itemCount; j++) {
             const itemJson:DishNetworkObj = initObjList[j]
             const title = itemJson.getTitle();
             const slug = itemJson.getSlug();
@@ -205,9 +196,8 @@ export class DishNetworksAPI {
                     console.log(`matched: ${title} item[${j}]: ${title}; ${slug}; ${net_id} `)
                 }
             }
-         }
+        }
         return filterNetObjs
     }
-
 
 }

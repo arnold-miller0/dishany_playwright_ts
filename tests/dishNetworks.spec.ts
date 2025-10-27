@@ -1,4 +1,4 @@
-import { test, expect, request, APIRequestContext} from '@playwright/test';
+import { test, expect, APIRequestContext} from '@playwright/test';
 import { DishAnywhereBasePage } from '../models/dishBasePage';
 
 import { DishAnywhereNetworkPage } from '../models/dishNetworkPage';
@@ -15,7 +15,7 @@ const doDebug = true;
 const onlyLive = true;   // Filter Live only Networks
 const onlyUnlock = true; // Filter Unlocked only Networks
 const onlyLatino = true; // Filter Latino only Networks
-const onlyMovie = true; // Filter Moive only Networks
+const onlyMovie = true;  // Filter Moive only Networks
 
 // Menu Icon only displayed on screen with width <= 1024
 // Need to click on Menu Icon to display Menu Options
@@ -95,7 +95,6 @@ test('Dish Network Count only Live Networks', async ({ page, request }) => {
 
 });
 
-
 test('Dish Network Count only Latino Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
@@ -103,7 +102,6 @@ test('Dish Network Count only Latino Networks', async ({ page, request }) => {
     await checkDispNetworkCount(request, networkPage, "only Latino", 
         !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
 });
-
 
 test('Dish Network Count only Movie Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
@@ -113,7 +111,6 @@ test('Dish Network Count only Movie Networks', async ({ page, request }) => {
         !onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !doDebug)
 });
 
-
 test('Dish Network Count All-Display Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
@@ -121,7 +118,6 @@ test('Dish Network Count All-Display Networks', async ({ page, request }) => {
     await checkDispNetworkCount(request, networkPage, "All-Display", 
         !onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
 });
-
 
 test('Dish Network Count all-checked Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
