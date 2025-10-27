@@ -4,7 +4,6 @@ import { DishAnywhereBasePage } from './dishBasePage';
 
 export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
 
-
     readonly topTopMenu:Locator
     readonly topNetwork:Locator
     readonly networksTitle:Locator
@@ -19,8 +18,6 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     readonly displayNetworkTop:Locator;
     readonly displayNetworkItems:Locator;
 
-
-
     private readonly _topNetText:string = 'NETWORKS';
     private readonly _topNetColor:string  = 'rgb(228, 25, 50)';
     private readonly _networkText:string  = 'Networks';
@@ -33,9 +30,9 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     private readonly _latinoOnlyText:string = "Show Latino Networks Only";
     private readonly _movieOnlyText:string = "Show DISH Movie Pack Only";
 
-    
+
     private readonly _noDispNetText:string = "No results found.";
-   
+
 
     constructor(page: Page, baseURL: string, webEnv: string) {
         super(page, baseURL, webEnv);
@@ -123,7 +120,6 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         await this._filterNetworkInfo(this.latinoOnlyFilter, this._latinoOnlyText);
         await this._filterNetworkInfo(this.movieOnlyFilter, this._movieOnlyText);
     }
-
     
     async dispNetworkFiltersText():Promise<void> {
         await this._filterNetworkInfo(this.liveOnlyFilter);
@@ -131,7 +127,6 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         await this._filterNetworkInfo(this.latinoOnlyFilter);
         await this._filterNetworkInfo(this.movieOnlyFilter);
     }
-
     
     async checkNetworkCount():Promise<number> {
         await this.setNetTitleCount();
@@ -144,7 +139,5 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         }
         return this._netTitleCount;
     }
-
-
 
 }
