@@ -129,7 +129,7 @@ test('Dish Network Count all-checked Networks', async ({ page, request }) => {
 
     const disCount = await checkDispNetworkCount(request, networkPage, "All-Display", 
         onlyLive, onlyUnlock, onlyLatino, onlyMovie, !doDebug)
-    // Should display 0 networks, since there Latino Dish Movie Pack networks
+    // Expect display 0 networks, since there Latino Dish Movie Pack networks
     expect(disCount).toBe(0)
 
 });

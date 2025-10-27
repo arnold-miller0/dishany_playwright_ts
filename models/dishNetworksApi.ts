@@ -126,7 +126,7 @@ export class DishNetworksAPI {
 
         // Check Filter All Networks or only One Filter list from largest to smaillest
         // When have Filter All Networks or only One return that filtered list
-        // Others set init-filter list to that filtered list for future matching
+        // Others set init-Obj Filter list to that filtered list for future matching
         //  Check 1st Filter All Networks 
         //  Check 2nd Filter Only Live 
         //  Check 3rd Filter Only Latino
@@ -134,53 +134,55 @@ export class DishNetworksAPI {
         //  Check 5th Filter Only Unlocked
 
         let filterNetObjs = new DishNetworkObjs(filterTitle);
-        let itemList = this._allNetworkObjs.getObjList();
+        let initObjList = this._allNetworkObjs.getObjList();
+
+        // All Networks
         if (!live && !unlocked && !latino && !movie) {
             const rtnNetObjs = this._allNetworkObjs.copyNetObjList(filterTitle, debug)         
             if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
             return rtnNetObjs
         }
 
-        if (live) {
+        if (live) { // Only Live Networks 
             if (!unlocked && !latino && !movie)  {
                 const rtnNetObjs = this._liveNetObjs.copyNetObjList(filterTitle, debug)         
                 if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
                 return rtnNetObjs
             }
-            itemList = this._liveNetObjs.getObjList();
+            initObjList = this._liveNetObjs.getObjList();
         }
 
-         if (latino) {
+         if (latino) { // Only Latino Networks 
             if (!unlocked && !live && !movie)  {
                 const rtnNetObjs = this._latinoNetObjs.copyNetObjList(filterTitle, debug)         
                 if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
                 return rtnNetObjs
             }
-            itemList = this._latinoNetObjs.getObjList();
+            initObjList = this._latinoNetObjs.getObjList();
         }
 
-        if (movie) {
+        if (movie) { // Only Movie Networks
             if (!unlocked && !live && !latino)  {
                 const rtnNetObjs = this._movieNetObjs.copyNetObjList(filterTitle, debug)         
                 if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
                 return rtnNetObjs
             }
-            itemList = this._movieNetObjs.getObjList();
+            initObjList = this._movieNetObjs.getObjList();
         }
   
-        if (unlocked) {
+        if (unlocked) { // Only Unlock Networks
             if (!movie && !live && !latino)  {
                 const rtnNetObjs = this._unlockNetObjs.copyNetObjList(filterTitle, debug)         
                 if (debug) { console.log(`filter Network list has ${rtnNetObjs.getListCount()} objs`) }
                 return rtnNetObjs
             }
-            itemList = this._unlockNetObjs.getObjList();
+            initObjList = this._unlockNetObjs.getObjList();
         }
 
-        // Future matching init-Filter list with all filter booleans
-        const itemCount = itemList.length;
+        // Now match init-Obj list with all filter booleans
+        const itemCount = initObjList.length;
          for (let j = 0; j < itemCount; j++) {
-            const itemJson:DishNetworkObj = itemList[j]
+            const itemJson:DishNetworkObj = initObjList[j]
             const title = itemJson.getTitle();
             const slug = itemJson.getSlug();
             const net_id = itemJson.getNetId();
