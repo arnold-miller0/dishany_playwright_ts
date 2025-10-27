@@ -75,9 +75,8 @@
 #### Menu Network option - solution
 - Set Browser width <= 1024 displays `Menu Network`
 - Fixed failed tests and moved to Network Menu Spec file
-  - With set Browser width before all tests
-  - TODO set Browser width for specific test 
-- TODO create Dish Network page Model to check network lists
+  - With set Browser width for specific test 
+- Dish Network page check network list counts (Web vs API)
   - API https://radish.dishanywhere.com/v20/dol/networks/home.json
     - fields: slug, name, network_id, vod_download, network_players (list), 
     - fields: network_player, banner, is_ad_free, howcount, moviecount,  

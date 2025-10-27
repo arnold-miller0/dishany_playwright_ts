@@ -193,5 +193,4 @@ export class DishAnywhereBasePage {
              return style.color; // e.g., "rgb(255, 0, 0)"
         });
     }
-
 }
