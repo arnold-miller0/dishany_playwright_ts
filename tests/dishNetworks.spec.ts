@@ -77,11 +77,11 @@ test('Dish Network Menu Extra Text', async ({ page }) => {
 });
 
 
-test('Dish Network Count Initial Networks', async ({ page, request }) => {
+test('Dish Network Count only Unlock Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(doDebug);
 
-     await checkDispNetworkCount(request, networkPage, "Init only Unlock", 
+     await checkDispNetworkCount(request, networkPage, "only Unlock", 
         !onlyLive, onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
 
 });
@@ -103,7 +103,7 @@ test('Dish Network Count only Latino Networks', async ({ page, request }) => {
         !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
 });
 
-test('Dish Network Count only Movie Networks', async ({ page, request }) => {
+test.only('Dish Network Count only Movie Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 

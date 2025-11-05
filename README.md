@@ -74,8 +74,6 @@
 - UI Failure tests `npx playwright test dishFailures.spec.ts --ui`
 #### Menu Network option - solution
 - Set Browser width <= 1024 displays `Menu Network`
-- Fixed failed tests and moved to Network Menu Spec file
-  - With set Browser width for specific test 
 - Dish Network page check network list counts (Web vs API)
   - API https://radish.dishanywhere.com/v20/dol/networks/home.json
     - fields: slug, name, network_id, vod_download, network_players (list), 
@@ -85,6 +83,9 @@
   - Live Networks via API `"has_stream": true`
   - Latino Networks via API `"is_latino_package_network": true`
   - Movie Pack Networks via API `"is_bb": true`
+- TODO Compare filtered displayed Networks with API filtered list
+   - Display Network `<div id="poster-tile-container" ...>`
+
 
 ### Fix now or later Failed tests 
 - Run UI for Spec file with consistent failed tests
