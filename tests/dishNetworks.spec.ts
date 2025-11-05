@@ -16,6 +16,8 @@ const onlyLive = true;   // Filter Live only Networks
 const onlyUnlock = true; // Filter Unlocked only Networks
 const onlyLatino = true; // Filter Latino only Networks
 const onlyMovie = true;  // Filter Moive only Networks
+const checkItems = true; // False - only check display item count
+                         // True - also check display item info
 
 // Menu Icon only displayed on screen with width <= 1024
 // Need to click on Menu Icon to display Menu Options
@@ -81,8 +83,8 @@ test('Dish Network Count only Unlock Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto(doDebug);
 
-     await checkDispNetworkCount(request, networkPage, "only Unlock", 
-        !onlyLive, onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
+     await checkDispNetworkInfo(request, networkPage, "only Unlock", 
+        !onlyLive, onlyUnlock, !onlyLatino, !onlyMovie, checkItems, !doDebug)
 
 });
 
@@ -90,8 +92,8 @@ test('Dish Network Count only Live Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "only Live", 
-        onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie,!doDebug)
+    await checkDispNetworkInfo(request, networkPage, "only Live", 
+        onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie, !checkItems, !doDebug)
 
 });
 
@@ -99,32 +101,33 @@ test('Dish Network Count only Latino Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "only Latino", 
-        !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "only Latino", 
+        !onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !checkItems, !doDebug)
 });
 
-test.only('Dish Network Count only Movie Networks', async ({ page, request }) => {
+test('Dish Network Count only Movie Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "only Movie", 
-        !onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "only Movie", 
+        !onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, checkItems, !doDebug)
+
 });
 
 test('Dish Network Count All-Display Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "All-Display", 
-        !onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "All-Display", 
+        !onlyLive, !onlyUnlock, !onlyLatino, !onlyMovie, !checkItems, !doDebug)
 });
 
 test('Dish Network Count all-checked Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    const disCount = await checkDispNetworkCount(request, networkPage, "All-Display", 
-        onlyLive, onlyUnlock, onlyLatino, onlyMovie, !doDebug)
+    const disCount = await checkDispNetworkInfo(request, networkPage, "All-Display", 
+        onlyLive, onlyUnlock, onlyLatino, onlyMovie, !checkItems, !doDebug)
     // Expect display 0 networks, since there Latino Dish Movie Pack networks
     expect(disCount).toBe(0)
 
@@ -134,35 +137,35 @@ test('Dish Network Count Live Movie Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "Live Movie", 
-        onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "Live Movie", 
+        onlyLive, !onlyUnlock, !onlyLatino, onlyMovie, !checkItems, !doDebug)
 });
 
 test('Dish Network Count Live Latino Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "Live Latino", 
-        onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "Live Latino", 
+        onlyLive, !onlyUnlock, onlyLatino, !onlyMovie, checkItems, !doDebug)
 });
 
 test('Dish Network Count Latino Movie Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "Latino Movie", 
-        !onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "Latino Movie", 
+        !onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !checkItems, !doDebug)
 });
 
 test('Dish Network Count Live Unlock Networks', async ({ page, request }) => {
     const networkPage = new DishAnywhereNetworkPage(page, webBaseUrl, webApiEnv);
     await networkPage.goto();
 
-    await checkDispNetworkCount(request, networkPage, "Live Unlock", 
-        onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !doDebug)
+    await checkDispNetworkInfo(request, networkPage, "Live Unlock", 
+        onlyLive, !onlyUnlock, onlyLatino, onlyMovie, !checkItems, !doDebug)
 });
 
-async function checkDispNetworkCount( 
+async function checkDispNetworkInfo( 
     request:APIRequestContext,
     networkPage:DishAnywhereNetworkPage,
     dispTitle:string,
@@ -170,6 +173,7 @@ async function checkDispNetworkCount(
     isUnlock:boolean,
     isLatino:boolean,
     isMovie:boolean,
+    checkItems:boolean,
     debug?:boolean)
     :Promise<number> {
 
@@ -185,6 +189,10 @@ async function checkDispNetworkCount(
         isLive, isUnlock, isLatino, isMovie, debug);
     console.log(apiNetList.getTitle(), "count:", apiNetList.getObjList().length);
     expect(webNetCount).toBe(apiNetList.getObjList().length)
+
+    if (checkItems) {
+        await networkPage.checkDispItems(apiNetList, doDebug);
+    }
 
     return webNetCount
     
