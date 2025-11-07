@@ -83,9 +83,10 @@
   - Live Networks via API `"has_stream": true`
   - Latino Networks via API `"is_latino_package_network": true`
   - Movie Pack Networks via API `"is_bb": true`
-- Compare Web filtered displayed Networks vs API filtered list
-   - Display & Check Network's Title, netId, imgSrc-jpg
-   - TODO check API has_stream and is_locked values
+- Compare Web filtered displayed Network Item vs API filtered list
+   - Display & Checked Web Item's Title, netId, imgSrc-jpg via API fields
+   - Checked Web Item has Live banner via API `has_stream` (live)
+   - Checked Web Item has Lock icon via API `is_locked` value
 
 
 ### Fix now or later Failed tests 

@@ -156,15 +156,15 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
                 theme="[object Object]" class="a b c h i j k kl l m">
         </a>
         // optional id="live-corner-icon" only when API has is_live (has_stream) true
-        // TODO when True check 'div#{id-attr}' below exists
-        // TORO When False check all 'div' objs do not have 'id-attr' below
+        // when True count 'div#{id-attr}' is 1
+        // When False count 'div#{id-attr}' is 0
         <div id="live-corner-icon" 
              theme="[object Object]" class="b c er h i ie if j k l">
              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAyCAMAAADGIxO9AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAELUExURUxpcU2l4Oby+1Gn4P///zWY2+r0+zSX2zOY2jSY2zma3FWp4ff7/lKn4O32/PX6/UGe3fb7/a3V8E6l4MLg9DaZ2zqb3Mbi9USg3tbq+OLw+kah3kKf3VSo4a7W8eXy+v3+/8Hf9Gey5Nrs+Nrs+Wmz5Eyk32Wx5Fap4V2t4qzV8G+25dHo9/H4/eby+k2l30mi31ys4lqr4rnb82Gv44vE6tXq+IG/6ZnL7afT7/r9/vn8/v7//7HX8XK45m215Tuc3GCu42ax5I7G6/z9/sDf9KLQ7kqj35PI7J/O7n6+6Feq4cvl9uTx+uHw+vP5/dns+I/G60mj36/X8bTZ8tPp9+n0+1us4rfa8pBILNYAAAAJdFJOUwD///////9xfOaz/IsAAAFzSURBVEjHvdZXb8IwEADgC1xCnYS9N7RABxS69957r///S+qAHIWCLnAPvRefJX/S2TpZB/CPMSOmigEKMcx0CAgUS1mkGYNiW7hOmxGUm8OU6WP+IEnqpvAzQyjXwEtT+BsPKuUxm+ln+m2ZNC7ykCXM66RR6DR+UVbECDct0ih0Fg9oDklIIh4iJ6RRaNaWaEDusaHTRqGmvTkgIoHbwscolNQraARlO8QjGV+jkGU7RJzjTn9rksa9k0PShf2iBHcvRpk03o5o46GI3RiInTZtPCh7cLQbRfv9W2ifFmlcFKxF97DwWhJC62LEIo1Cq9Fa6jgtEy2AP9XIAmkUWkv2F0kqem+AwBcpYstm6nU7tPGgZAA/vqotaVs+xkVJp7Cg8Vik320Izcef5fHwVXoSo9Di8tMb3W9jUeF6YuOWF61PbhTaWJnCjP6wwEDAQMBAwEDAQMBAwEDAQMBAwEDAQMBAwEDAQMBAjCksxBndfgHSwzZsdv2/YAAAAABJRU5ErkJggg==" theme="[object Object]" height="40" width="40" class="a b c cv cw h i j k l">
         </div>
         // optional href="https://www.mydish.com/login" only when API has is_locked true
-        // TODO when True check 'a#hef-attr' and sub-obj 'svg#id-attr' exists
-        // TODO when False check all 'a' objs do not exists or exists with no sub 'svg#id-attr
+        // when True count 'svg#id-attr' is 1 
+        // when False count 'svg#id-attr' is 0
         <a href="https://www.mydish.com/login"
             theme="[object Object]" class="b c ck cv dj dl dr ds dt gx h i j k km kn ko l">
             <svg id="lock-icon" 
@@ -178,7 +178,11 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
     </div>
     */
 
-    async checkDispItems(apiFilterList: DishNetworkObjs, debug?:boolean):Promise<void> {
+    async checkDispItems(
+        apiFilterList: DishNetworkObjs, 
+        dispInfo:boolean, 
+        debug?:boolean
+    ):Promise<void> {
         await this.setNetTitleCount();
 
         const apiNetCount = apiFilterList.getListCount();
@@ -191,22 +195,35 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         const apiNetObjs = apiFilterList.getObjList();
         const dispNetCount = await this.displayNetworkItems.count()
         expect(dispNetCount).toBe(apiNetCount);
-        for (let i=0; i < dispNetCount; i++) {
+        for (let i=0; i <
+             dispNetCount; i++) {
             const dispItem = this.displayNetworkItems.nth(i);
             const titleInfoLoc = await dispItem.locator("a#poster-tile-link");
             const dispHref = await titleInfoLoc.getAttribute("href")
             const titleImageLoc = await titleInfoLoc.locator("img#poster-tile-image")
             const dispImgSrc = await titleImageLoc.getAttribute("src")
             const dispTitle = await titleImageLoc.getAttribute("title")
-            console.log(`Web Display[${i}]: ${dispTitle}; ${dispHref}; ${dispImgSrc}`)
+            const dispIsLock = await dispItem.locator("svg#lock-icon").count();
+            const dispIsLive = await dispItem.locator("div#live-corner-icon").count();
+            if (dispInfo || debug) {
+                console.log(`Web Display[${i}]: ${dispTitle}; ${dispHref}; Locked ${dispIsLock == 1}; ` 
+                            + `Live ${dispIsLive == 1}; ${dispImgSrc};`)
+            }
             const apiItem = apiNetObjs[i];
             const apiTitle = apiItem.getTitle();
             const apiNetId = apiItem.getNetId();
             const apiImgSrc = apiItem.getImgSrc();
-            console.log(`Api Display[${i}]: ${apiTitle}; /networks/${apiNetId}; ${apiImgSrc}`)
+            const apiIsLive = apiItem.getIsLive();
+            const apiIsLock = apiItem.getIslocked();
+            if (dispInfo || debug) {
+                console.log(`Api Display[${i}]: ${apiTitle}; /networks/${apiNetId}; Locked ${apiIsLock}; ` 
+                            + `Live ${apiIsLive}; ${apiImgSrc};`)
+            }
             expect(dispTitle).toBe(apiTitle);
             expect(dispHref).toBe('/networks/' + apiNetId);
             expect(dispImgSrc).toBe(apiImgSrc);
+            expect(dispIsLock == 1).toBe(apiIsLock);
+            expect(dispIsLive == 1).toBe(apiIsLive);
         }
     
     }
