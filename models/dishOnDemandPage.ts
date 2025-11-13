@@ -7,10 +7,6 @@ export class DishAnywhereOnDemandPage extends DishAnywhereBasePage {
 
     readonly signInObj: DishAnywhereSignInInfo;
 
-    readonly signInTitle: Locator;
-    readonly signInMessage: Locator;
-    readonly signInButton: Locator;
-
     constructor(page: Page, baseURL: string, webEnv: string) {
         super(page, baseURL, webEnv);
 

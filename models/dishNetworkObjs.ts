@@ -60,7 +60,7 @@ export class DishNetworkObj {
         return this._is_movie;
     }
     
-    getIsImgSrc():string {
+    getImgSrc():string {
         return this._imgSrc;
     }
 
@@ -146,7 +146,7 @@ export class DishNetworkObjs {
             const is_locked = itemObj.getIslocked();
             const is_latino = itemObj.getIsLatino()
             const is_movie = itemObj.getIsMovie();
-            const imgSrc = itemObj.getIsImgSrc();
+            const imgSrc = itemObj.getImgSrc();
             const objItem = new DishNetworkObj(title, slug, net_id, 
                         is_live, is_locked, is_latino, is_movie, imgSrc);
             rtnNetObjs.addNetworkObj(objItem);
