@@ -186,12 +186,9 @@ export class DishAnywhereNetworkPage extends DishAnywhereBasePage {
         await this.setNetTitleCount();
 
         const apiNetCount = apiFilterList.getListCount();
+        console.log("Compare the", apiNetCount, "Displayed Networks");
         expect(this._netTitleCount).toBe(apiNetCount)
 
-        if (this._netTitleCount == 0) {
-            console.log(`No Networks Displayed`)
-            return;
-        }
         const apiNetObjs = apiFilterList.getObjList();
         const dispNetCount = await this.displayNetworkItems.count()
         expect(dispNetCount).toBe(apiNetCount);
