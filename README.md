@@ -1,11 +1,13 @@
 ## Dish Anywhere web sample tests
 
 - Playwright - Typescript
-   - Windows 11 OS on 9 Jan 2025
-  - Playwright: Version 1.45.1
+   - Windows 11 OS on 7 Dec 2025
+  - Playwright: Version 1.57.0
   - `npm list`
-    - `@playwright/test@1.49.1`
-    - `@types/node@22.10.2`
+    - `@playwright/test@1.57.0`
+    - `@types/node@22.19.1`
+  - `npm -v 10.9.4`
+  - `node -v v20.10.0`
 
 - Repo only has following directories
   - Models - Web page and API request
@@ -21,8 +23,8 @@
 - After install completes
   - run `npm list` check above `@playwright/test@` and `@types/node@` version
     - if `UNMET DEPENDENCY` or missing then install these npm packages via
-      - `npm install @playwright/test@` or `npm install @playwright/test@1.49.1`
-      - `npm install @types/node@` or `npm install @types/node@22.10.2`
+      - `npm install @playwright/test@` or `npm install @playwright/test@1.57.0`
+      - `npm install @types/node@` or `npm install @types/node@22.12.0`
       - check again via `npm list`
   - move `tests/example.spec.ts` file to `tests-examples` directory
 
