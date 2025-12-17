@@ -1,7 +1,7 @@
 {
   "name": "dishany_playwright_ts",
-  "version": "1.0.0",
-  "description": "- Playwright - Typescript\r   - `npm list`\r     - `@playwright/test@1.49.1`\r     - `@types/node@22.10.2`",
+  "version": "1.1.0",
+  "description": "- Playwright - Typescript\r   - `npm list`\r     - `@playwright/test@1.57.0`\r     - `@types/node@22.19.3`",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -12,6 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@types/node": "^22.19.1"
+    "@types/node": "^22.19.3"
   }
 }

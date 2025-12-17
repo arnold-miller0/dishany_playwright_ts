@@ -1,13 +1,13 @@
 ## Dish Anywhere web sample tests
 
 - Playwright - Typescript
-   - Windows 11 OS on 7 Dec 2025
+   - Windows 11 OS on 17 Dec 2025
   - Playwright: Version 1.57.0
   - `npm list`
     - `@playwright/test@1.57.0`
-    - `@types/node@22.19.1`
+    - `@types/node@22.19.3`
   - `npm -v 10.9.4`
-  - `node -v v20.10.0`
+  - `node -v v24.11.1`
 
 - Repo only has following directories
   - Models - Web page and API request
@@ -111,7 +111,7 @@
   - `npx playwright test`
 - Specific browser (chromium, firefox, webkit)
   - `npx playwright test dishSignIn.spec.ts --project chromium`
-  - `npx playwright test dishSports.spec.ts --project firefox`
+  - `npx playwright test dishNetworks.spec.ts --project firefox`
   - `npx playwright test dishHome.spec.ts --project webkit`
 - Display browser (all browsers)
   - `npx playwright test dishBase.spec.ts --headed`
